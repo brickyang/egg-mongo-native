@@ -24,24 +24,29 @@
 Description here.
 -->
 
-## 依赖说明
+这个插件提供了官方的 MongoDB driver API。你可以在这里查看所有 API：[Node.js MongoDB Driver API](http://mongodb.github.io/node-mongodb-native/2.2/api/)。
 
-### 依赖的 egg 版本
+插件对一些常用 API 进行了封装以简化使用，同时保留了所有原版属性。例如，你可以用
 
-egg-mongo 版本 | egg 1.x
---- | ---
-1.x | 😁
-0.x | ❌
+```js
+app.mongo.find('name', {});
+```
 
-### 依赖的插件
-<!--
+代替原版写法
 
-如果有依赖其它插件，请在这里特别说明。如
+```js
+db.collection('name').find({}).toArray();
+```
 
-- security
-- multipart
+当然，在任何时候你都可以通过 `app.mongo.db` 使用所有原版 API。
 
--->
+此插件完全支持 Promise，并强烈推荐使用 async/await。
+
+## 安装
+
+```bash
+$ npm i egg-mongo-native --save
+```
 
 ## 开启插件
 
@@ -53,23 +58,20 @@ exports.mongo = {
 };
 ```
 
-## 使用场景
+## 配置
 
-- Why and What: 描述为什么会有这个插件，它主要在完成一件什么事情。
-尽可能描述详细。
-- How: 描述这个插件是怎样使用的，具体的示例代码，甚至提供一个完整的示例，并给出链接。
-
-## 详细配置
+```javascript
+// {app_root}/config/config.default.js
+exports.mongo = {
+  client: {
+    host: 'localhost',
+    port: 27017,
+    name: 'test',
+  },
+};
+```
 
 请到 [config/config.default.js](config/config.default.js) 查看详细配置项说明。
-
-## 单元测试
-
-<!-- 描述如何在单元测试中使用此插件，例如 schedule 如何触发。无则省略。-->
-
-## 提问交流
-
-请到 [egg issues](https://github.com/eggjs/egg/issues) 异步交流。
 
 ## License
 

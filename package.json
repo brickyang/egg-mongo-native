@@ -1,7 +1,7 @@
 {
   "name": "egg-mongo-native",
   "version": "1.0.0",
-  "description": "MongoDB egg.js plugin using MongoDB native driver.",
+  "description": "MongoDB egg.js plugin using native driver.",
   "eggPlugin": {
     "name": "mongo"
   },

@@ -7,8 +7,8 @@
 [![Known Vulnerabilities][snyk-image]][snyk-url]
 [![npm download][download-image]][download-url]
 
-[npm-image]: https://img.shields.io/npm/v/egg-mongo.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/egg-mongo
+[npm-image]: https://img.shields.io/npm/v/egg-mongo-native.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/egg-mongo-native
 [travis-image]: https://img.shields.io/travis/eggjs/egg-mongo.svg?style=flat-square
 [travis-url]: https://travis-ci.org/eggjs/egg-mongo
 [codecov-image]: https://img.shields.io/codecov/c/github/eggjs/egg-mongo.svg?style=flat-square
@@ -17,14 +17,14 @@
 [david-url]: https://david-dm.org/eggjs/egg-mongo
 [snyk-image]: https://snyk.io/test/npm/egg-mongo/badge.svg?style=flat-square
 [snyk-url]: https://snyk.io/test/npm/egg-mongo
-[download-image]: https://img.shields.io/npm/dm/egg-mongo.svg?style=flat-square
-[download-url]: https://npmjs.org/package/egg-mongo
+[download-image]: https://img.shields.io/npm/dm/egg-mongo-native.svg?style=flat-square
+[download-url]: https://npmjs.org/package/egg-mongo-native
 
-[**English**](https://github.com/brickyang/egg-mongo/blob/master/README.en_US.md)
+[**中文版**](https://github.com/brickyang/egg-mongo/blob/master/README.md)
 
-s本插件基于 [node-mongodb-native](https://github.com/mongodb/node-mongodb-native)，提供了 MongoDB 官方 driver 及 API。
+This plugin base on [node-mongodb-native](https://github.com/mongodb/node-mongodb-native), provides the official MongoDB native driver and APIs.
 
-插件对一些常用 API 进行了简单封装以简化使用，同时保留了所有原版属性。例如，使用原版 API 进行一次查找需要写
+It wraps some frequently-used API to make it easy to use but keep all properties as it is. For example, to find a document you need this with official API
 
 ```js
 db.collection('name')
@@ -36,33 +36,31 @@ db.collection('name')
  .toArray();
 ```
 
-封装后
+and with this plugin
 
 ```js
 app.mongo.find('name', { query, skip, limit, project, sort });
 ```
 
-此插件完全支持 Promise，并强烈推荐使用 async/await。
-
-## 安装
+## Install
 
 ```bash
 $ npm i egg-mongo-native --save
 ```
 
-## 开启插件
+## Enable Plugin
 
 ```js
-// config/plugin.js
+// {app_root}/config/plugin.js
 exports.mongo = {
   enable: true,
   package: 'egg-mongo',
 };
 ```
 
-## 配置
+## Configuration
 
-```javascript
+```js
 // {app_root}/config/config.default.js
 exports.mongo = {
   client: {
@@ -73,29 +71,29 @@ exports.mongo = {
 };
 ```
 
-请到 [config/config.default.js](config/config.default.js) 查看详细配置项说明。
+see [config/config.default.js](config/config.default.js) for more detail.
 
-## 使用示例
+## Example
 
-本插件提供的 API 只是对原版 API 进行了必要的简化，所有属性名称与原版 API 一致。所有针对文档操作的 API，通常接受 2 个参数，第一个参数是 collection 名称，第二个参数是一个对象，属性名即为原版 API 的所有参数。例如，使用原版 API 进行一次插入
+The APIs provided by plugin usually need two arguments. The first is commonly the collection name, and the second is an object keeps the arguments of official API. For example, to insert one document with official API
 
 ```js
 db.collection('name').insertOne(doc, options);
 ```
 
-使用插件 API
+and with plugin API
 
 ```js
 const args = { doc, options };
 app.mongo.insertOne('name', args);
 ```
 
-可以看到 `args` 就是包含原版 API 参数的一个对象。
+The `args` is the object provides the arguments to official API.
 
-目前插件提供的 API 包括：
+Until now, this plugin provides thes APIs
 
 ```js
-connect()      // 不需要用户调用
+connect()      // you don't need to call
 insertOne()
 findOneAndUpdate()
 findOneAndReplace()
@@ -111,13 +109,13 @@ listCollection()
 createCollection()
 ```
 
-当然，在任何时候你也都可以使用 `app.mongo.db` 调用所有 API。你可以在这里查看所有 API：[Node.js MongoDB Driver API](http://mongodb.github.io/node-mongodb-native/2.2/api/)。
+You can always use `app.mongo.db` to call all official APIs. You can check the APIs here: [Node.js MongoDB Driver API](http://mongodb.github.io/node-mongodb-native/2.2/api/).
 
-## 同步与异步
+## Promise
 
-`node-mongodb-native` 所有 API 都支持 Promise，因此你可以自由地以异步或同步方式使用本插件。
+`node-mongodb-native` supports Promise, you can call all APIs async or sync.
 
-### 异步
+### Async
 
 ```js
 // Promise
@@ -128,10 +126,10 @@ function create(doc) {
 }
 ```
 
-### 同步
+### Sync
 
-```js
-// 使用 async/await
+````js
+// async/await
 async function create(doc) {
   try {
     const result = await app.mongo.insertOne('name', { doc });
@@ -141,7 +139,7 @@ async function create(doc) {
   }
 }
 
-// 使用 Generator
+// Generator
 function* create(doc) {
   try {
     const result = yield app.mongo.insertOne('name', { doc });
@@ -150,11 +148,9 @@ function* create(doc) {
     console.error(error);
   }
 }
-```
+````
 
-如果你使用 `app.mongo.db` 调用原版 API，则也可以使用回调函数。插件封装的 API 不支持回调函数，因为 Promise 和 async/await 更加优雅。
-
-Node.js 7.6 开始已经原生支持 async/await，不再需要 Babel。
+If you use `app.mongo.db` you could use callback(usually the last argument), but this plugin doesn't supports callback because Promise and async/await are better choice.
 
 ## License
 

@@ -1,15 +1,21 @@
 sudo: false
 language: node_js
 node_js:
-  - '7'
-  - '8'
+- '7'
+- '8'
 install:
-  - npm i npminstall && npminstall
+- npm i npminstall && npminstall
 services:
-  - mongodb
+- mongodb
 before_script:
-  - sleep 15
+- sleep 15
 script:
-  - npm run ci
+- npm run ci
 after_script:
-  - npminstall codecov && codecov
+- npminstall codecov && codecov
+deploy:
+  provider: npm
+  email: brick.c.yang@gmail.com
+  api_key: apGpBYkCY+CykTJ6yZDeoq7bFv+UqegJs2XK6tXvLa8fitnRFV851/WOGa0Bz5phY0QI6D37WCEwTo0LYbAItxK17Jr5EQr1yFYB/1+ifMnXruDKnaD04eKeskd5pRRMB34lg1S0UJRGqq89+iDW9KXMrc0C7rNWonPtVo4YtVbAa4AyxfFQ2vVIlGiOLqFDgSEUPT8WxIgcJVP+gXSFuyF46ojWG6JpwlGuKPIW+hqoew7Yp1ebUgQz2Wflx7Nk606yAzfibbD9Xeiz1GkxqhCJnhee+ywnQao5yPp5pB7hC2SMd6QzeNY5qkaL9kKpgdziYVJU8IMFV6SXBTRnri0NOSExj2pceQy41N6k6YCbY1Dne9aIrBI5N+DT4VF0w3s/43q4/77q0yQmONFQEpkm59hLWQzZphiSF9MUssUHA95d/+65ujlS4C76YCo/x3CKe69cHKARAtyHgK665s2gw5F6tTdiJFc/57HvUfIV6bN4uIMT05cYg2VSplkCjgtgkCJeFFk+Sj9Xd5C+Al+ifC4C8hvrZr3xzKStTY+xG47GVBtmwrxa59TsPnIUQCKOQtv5U4goUBVmObXISxobD08RGQPmTD1KWzZ/O0Vc3/XZnjpFVlpUbHRbT2nnMsHS0strdV+sMnyom+7PQ0faefxJF2BRoUN5X9ZKScw=
+  on:
+    tags: true

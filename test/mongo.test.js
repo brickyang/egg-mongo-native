@@ -37,14 +37,14 @@ describe('test/mongo.test.js', () => {
     return request(app.callback())
       .get('/')
       .expect(200)
-      .then(res => assert(Array.isArray(res.body) && res.body.length === 10));
+      .expect(res => assert(Array.isArray(res.body) && res.body.length === 10));
   });
 
   it('should GET /:id', () => {
     return request(app.callback())
       .get(`/${id}`)
       .expect(200)
-      .then(res => assert(res.body._id.toString() === id.toString()));
+      .expect(res => assert(res.body._id.toString() === id.toString()));
   });
 
   it('should POST /', () => {
@@ -53,48 +53,87 @@ describe('test/mongo.test.js', () => {
       .post('/')
       .send({ doc: 'doc' })
       .expect(201)
-      .then(res => {
+      .expect(res => {
         assert(res.body.hasOwnProperty('insertedCount') && res.body.insertedCount === 1);
         assert(res.body.hasOwnProperty('value') && res.body.value.doc === 'doc');
       });
   });
 
-  it('should put /:id', () => {
+  it('should PUT /:id', () => {
     app.mockCsrf();
     return request(app.callback())
       .put(`/${id}`)
       .send({ doc: 'doc' })
       .expect(200)
-      .then(res => {
+      .expect(res => {
         assert(res.body.ok === 1);
         assert(res.body.value.doc === 'doc');
         assert(res.body.value._id === id.toString());
       });
   });
 
-  it('should delete /:id', () => {
+  it('should PUT /', () => {
+    app.mockCsrf();
+    return request(app.callback())
+      .put('/')
+      .send({ doc: 'doc' })
+      .expect(200)
+      .expect(res => assert(res.body.modifiedCount === 10));
+  });
+
+  it('should PUT /:id and replace', () => {
+    app.mockCsrf();
+    return request(app.callback())
+      .put(`/${id}`)
+      .query('replace')
+      .send({ doc: 'doc' })
+      .expect(200)
+      .expect(res => {
+        assert(res.body.ok === 1);
+        assert(res.body.value.doc === 'doc');
+        assert(!res.body.value.hasOwnProperty('type'));
+        assert(res.body.value._id === id.toString());
+      });
+  });
+
+  it('should DELETE /:id', () => {
     app.mockCsrf();
     return request(app.callback())
       .del(`/${id}`)
       .expect(200)
-      .then(res => {
+      .expect(res => {
         assert(res.body.ok === 1);
         assert(res.body.value.doc === 'doc1');
         assert(res.body.value._id === id.toString());
       });
   });
 
-  it('should get /total', () => {
+  it('should GET /total', () => {
     return request(app.callback())
       .get('/total')
       .expect('10')
       .expect(200);
   });
 
-  it('should get /collections', () => {
+  it('should GET /collections', () => {
     return request(app.callback())
       .get('/collections')
       .expect(200)
-      .then(res => assert(Array.isArray(res.body) && res.body.indexOf('new') !== -1));
+      .expect(res => assert(Array.isArray(res.body) && res.body.indexOf('new') !== -1));
+  });
+
+  it('should GET /distinct', () => {
+    return request(app.callback())
+      .get('/distinct')
+      .expect(200)
+      .expect(res => {
+        assert(Array.isArray(res.body.doc) && res.body.doc.length === 10);
+        assert(Array.isArray(res.body.type) && res.body.type.length === 1);
+      });
+  });
+
+  it('should create index', async () => {
+    const result = await app.mongo.createIndex('test', { fieldOrSpec: 'doc' });
+    assert(result === 'doc_1');
   });
 });

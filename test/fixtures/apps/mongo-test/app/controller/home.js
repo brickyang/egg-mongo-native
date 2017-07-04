@@ -33,11 +33,27 @@ module.exports = app => {
       const args = {
         filter: { _id: new ObjectID(id) },
         update: { $set: ctx.request.body },
+        replacement: ctx.request.body,
         options: { returnOriginal: false },
       };
 
-      ctx.body = await app.mongo.findOneAndUpdate('test', args);
+      if (ctx.query.hasOwnProperty('replace')) {
+        ctx.body = await app.mongo.findOneAndReplace('test', args);
+      } else {
+        ctx.body = await app.mongo.findOneAndUpdate('test', args);
+      }
       ctx.status = 200;
+    }
+
+    async updateMany() {
+      const { ctx } = this;
+
+      const args = {
+        update: { $set: { type: 'update' } },
+        options: { returnOriginal: false },
+      };
+
+      ctx.body = await app.mongo.updateMany('test', args);
     }
 
     async destroy() {
@@ -61,6 +77,15 @@ module.exports = app => {
       await app.mongo.createCollection({ name: 'new' });
       ctx.body = await app.mongo.listCollections();
       ctx.status = 200;
+    }
+
+    async distinct() {
+      const { ctx } = this;
+
+      ctx.body = {
+        doc: await app.mongo.distinct('test', { key: 'doc' }),
+        type: await app.mongo.distinct('test', { key: 'type' }),
+      };
     }
   }
   return Controller;

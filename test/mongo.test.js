@@ -154,6 +154,7 @@ describe('test/mongo.test.js', () => {
     it('should upsert success', async () => {
       const result = await app.mongo.findOneAndReplace(NAME, {
         filter: { title: 'upsert' },
+        replacement: { doc: 'replace' },
         options: { upsert: true, returnOriginal: false },
       });
       assert(result.ok === 1);

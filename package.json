@@ -43,8 +43,7 @@
   "files": [
     "config",
     "app.js",
-    "lib",
-    "test"
+    "lib"
   ],
   "ci": {
     "version": "6, 8"

@@ -7,22 +7,22 @@
 [![Known Vulnerabilities][snyk-image]][snyk-url]
 [![npm download][download-image]][download-url]
 
-[npm-image]: https://img.shields.io/npm/v/egg-mongo.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/egg-mongo
-[travis-image]: https://img.shields.io/travis/eggjs/egg-mongo.svg?style=flat-square
-[travis-url]: https://travis-ci.org/eggjs/egg-mongo
-[codecov-image]: https://img.shields.io/codecov/c/github/eggjs/egg-mongo.svg?style=flat-square
-[codecov-url]: https://codecov.io/github/eggjs/egg-mongo?branch=master
-[david-image]: https://img.shields.io/david/eggjs/egg-mongo.svg?style=flat-square
-[david-url]: https://david-dm.org/eggjs/egg-mongo
-[snyk-image]: https://snyk.io/test/npm/egg-mongo/badge.svg?style=flat-square
-[snyk-url]: https://snyk.io/test/npm/egg-mongo
-[download-image]: https://img.shields.io/npm/dm/egg-mongo.svg?style=flat-square
-[download-url]: https://npmjs.org/package/egg-mongo
+[npm-image]: https://img.shields.io/npm/v/egg-mongo-native.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/egg-mongo-native
+[travis-image]: https://img.shields.io/travis/brickyang/egg-mongo.svg?style=flat-square
+[travis-url]: https://travis-ci.org/brickyang/egg-mongo
+[codecov-image]: https://img.shields.io/codecov/c/github/brickyang/egg-mongo.svg?style=flat-square
+[codecov-url]: https://codecov.io/github/brickyang/egg-mongo?branch=master
+[david-image]: https://img.shields.io/david/brickyang/egg-mongo.svg?style=flat-square
+[david-url]: https://david-dm.org/brickyang/egg-mongo
+[snyk-image]: https://snyk.io/test/npm/egg-mongo-native/badge.svg?style=flat-square
+[snyk-url]: https://snyk.io/test/npm/egg-mongo-native
+[download-image]: https://img.shields.io/npm/dm/egg-mongo-native.svg?style=flat-square
+[download-url]: https://npmjs.org/package/egg-mongo-native
 
 [**English**](https://github.com/brickyang/egg-mongo/blob/master/README.en_US.md)
 
-s本插件基于 [node-mongodb-native](https://github.com/mongodb/node-mongodb-native)，提供了 MongoDB 官方 driver 及 API。
+本插件基于 [node-mongodb-native](https://github.com/mongodb/node-mongodb-native)，提供了 MongoDB 官方 driver 及 API。
 
 插件对一些常用 API 进行了简单封装以简化使用，同时保留了所有原版属性。例如，使用原版 API 进行一次查找需要写
 

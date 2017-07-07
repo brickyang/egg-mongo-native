@@ -470,5 +470,6 @@ describe('test/mongo.test.js', () => {
         assert(error instanceof Error);
       }
     });
+
   });
 });

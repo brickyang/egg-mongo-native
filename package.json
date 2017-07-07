@@ -19,12 +19,12 @@
   "devDependencies": {
     "autod": "^2.8.0",
     "autod-egg": "^1.0.0",
-    "egg": "^1.4.0",
-    "egg-bin": "^3.4.0",
-    "egg-ci": "^1.6.0",
-    "egg-mock": "^3.7.0",
-    "eslint": "^3.19.0",
-    "eslint-config-egg": "^4.2.0",
+    "egg": "^1.5.0",
+    "egg-bin": "^4.0.4",
+    "egg-ci": "^1.8.0",
+    "egg-mock": "^3.8.0",
+    "eslint": "^4.1.1",
+    "eslint-config-egg": "^5.0.0",
     "supertest": "^3.0.0",
     "webstorm-disable-index": "^1.2.0"
   },
@@ -42,9 +42,9 @@
   },
   "files": [
     "config",
-    "agent.js",
     "app.js",
-    "lib"
+    "lib",
+    "test"
   ],
   "ci": {
     "version": "6, 8"
@@ -56,7 +56,7 @@
   "bugs": {
     "url": "https://github.com/brickyang/egg-mongo/issues"
   },
-  "homepage": "https://github.com/eggjs/egg-mongo#readme",
+  "homepage": "https://github.com/brickyang/egg-mongo#readme",
   "author": "Brick <brick.c.yang@gmail.com>",
   "license": "MIT"
 }

@@ -13,11 +13,3 @@ script:
 - npm run ci
 after_script:
 - npminstall codecov && codecov
-deploy:
-  provider: npm
-  email: brick.c.yang@gmail.com
-  api_key:
-    secure: R5xm8dZvoTc09DDGMcjHakNtsR9plVjtjxhg6eDPgRX5XGt26TgPosiZ8T+bcApCqdQrmbyk437LmLgaRUU+yAQcMzQKVbKA4UoVjiJwwelyVkps7/m761XTz80UcjkGmfyaSQI0p1cWFmM3q6v8THK/a6R/5EbbSWPzYnhhC3od6w+IIn4c143tBwXaN/rwXAQgse3zKM8PlalTAE+jzFuddA9GARvLstL3+oLAvpceQeuQB1+G0K4y214iQktAA9W/EAGEhQtYlqbC6DIlZeeR+/cUI4rogn2jgaYawExOoEGRIZCpzFMVqXx/7MnrwPTkjX7BtNMSqBKTY0zRiL9JPFOGbl0TtR0xPcAI48pNUUweocVGx/XpLxj9nqs8oltL2d+sZblVTYKGZeq7Ucsx7FudpJLHTARP4KSLEKv0fzKbCarFpziKngegtBVlws8ZbrFIR/uCwsrd6LOdwHatym4gptPg/q8xaYXYa8AW5G5YN0Gm6P8AatNOdF1H4dKY3pzHnmuDrVriua5zfn0kEazaWMgD0ctqq2xlSZZR7jIyibYAzpefJVTNSsyElVK10nmlN+WiyA/+ebsPxUjy8ThNsP7ofLcWJu/rON3htsAqte+70FGrqkjB3n7PZ93JrKQz9bW1kA8HcfDm3T0s/P2vh1XR3rESJ33gNmo=
-  on:
-    tags: true
-    repo: brickyang/egg-mongo

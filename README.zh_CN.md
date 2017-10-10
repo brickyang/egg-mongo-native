@@ -56,7 +56,7 @@ $ npm i egg-mongo-native --save
 // config/plugin.js
 exports.mongo = {
   enable: true,
-  package: 'egg-mongo',
+  package: 'egg-mongo-native',
 };
 ```
 

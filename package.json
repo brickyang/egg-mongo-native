@@ -1,6 +1,6 @@
 {
   "name": "egg-mongo-native",
-  "version": "1.0.7",
+  "version": "2.0.0",
   "description": "MongoDB egg.js plugin using native driver.",
   "eggPlugin": {
     "name": "mongo"
@@ -14,22 +14,22 @@
     "mongo-driver"
   ],
   "dependencies": {
-    "mongodb": "^2.2.29"
+    "mongodb": "^2.2.0"
   },
   "devDependencies": {
-    "autod": "^2.8.0",
+    "autod": "^3.0.1",
     "autod-egg": "^1.0.0",
-    "egg": "^1.5.0",
-    "egg-bin": "^4.0.4",
+    "egg": "^2.0.0",
+    "egg-bin": "^4.3.6",
     "egg-ci": "^1.8.0",
-    "egg-mock": "^3.8.0",
-    "eslint": "^4.1.1",
-    "eslint-config-egg": "^5.0.0",
+    "egg-mock": "^3.13.1",
+    "eslint": "^4.13.0",
+    "eslint-config-egg": "^5.1.1",
     "supertest": "^3.0.0",
     "webstorm-disable-index": "^1.2.0"
   },
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=8.9.0"
   },
   "scripts": {
     "test": "npm run lint -- --fix && npm run pkgfiles && npm run test-local",
@@ -46,7 +46,7 @@
     "lib"
   ],
   "ci": {
-    "version": "6, 8"
+    "version": "8, 9"
   },
   "repository": {
     "type": "git",

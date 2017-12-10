@@ -10,7 +10,7 @@
 [npm-image]: https://img.shields.io/npm/v/egg-mongo-native.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/egg-mongo-native
 [travis-image]: https://img.shields.io/travis/brickyang/egg-mongo.svg?style=flat-square
-[travis-url]: https://travis-ci.org/brickyang/egg-mongo
+[travis-url]: https://travis-ci.org/brickyang/egg-mongo-native
 [codecov-image]: https://img.shields.io/codecov/c/github/brickyang/egg-mongo.svg?style=flat-square
 [codecov-url]: https://codecov.io/github/brickyang/egg-mongo?branch=master
 [david-image]: https://img.shields.io/david/brickyang/egg-mongo.svg?style=flat-square
@@ -27,13 +27,14 @@ This plugin base on [node-mongodb-native](https://github.com/mongodb/node-mongod
 It wraps some frequently-used API to make it easy to use but keep all properties as it is. For example, to find a document you need this with official API
 
 ```js
-db.collection('name')
- .find(query)
- .skip(skip)
- .limit(limit)
- .project(project)
- .sort(sort)
- .toArray();
+db
+  .collection('name')
+  .find(query)
+  .skip(skip)
+  .limit(limit)
+  .project(project)
+  .sort(sort)
+  .toArray();
 ```
 
 and with this plugin
@@ -93,20 +94,20 @@ The `args` is the object provides the arguments to official API.
 Until now, this plugin provides thes APIs
 
 ```js
-connect()      // you don't need to call
-insertOne()
-findOneAndUpdate()
-findOneAndReplace()
-findOneAndDelete()
-insertMany()
-updateMany()
-deleteMany()
-find()
-count()
-distinct()
-createIndex()
-listCollection()
-createCollection()
+connect(); // you don't need to call
+insertOne();
+findOneAndUpdate();
+findOneAndReplace();
+findOneAndDelete();
+insertMany();
+updateMany();
+deleteMany();
+find();
+count();
+distinct();
+createIndex();
+listCollection();
+createCollection();
 ```
 
 You can always use `app.mongo.db` to call all official APIs. You can check the APIs here: [Node.js MongoDB Driver API](http://mongodb.github.io/node-mongodb-native/2.2/api/).
@@ -120,15 +121,16 @@ You can always use `app.mongo.db` to call all official APIs. You can check the A
 ```js
 // Promise
 function create(doc) {
-  app.mongo.insertOne('name', { doc })
-  .then(result => console.log(result))
-  .catch(error => console.error(error));
+  app.mongo
+    .insertOne('name', { doc })
+    .then(result => console.log(result))
+    .catch(error => console.error(error));
 }
 ```
 
 ### Sync
 
-````js
+```js
 // async/await
 async function create(doc) {
   try {
@@ -138,17 +140,7 @@ async function create(doc) {
     console.error(error);
   }
 }
-
-// Generator
-function* create(doc) {
-  try {
-    const result = yield app.mongo.insertOne('name', { doc });
-    console.log(result);
-  } catch (errpr) {
-    console.error(error);
-  }
-}
-````
+```
 
 If you use `app.mongo.db` you could use callback(usually the last argument), but this plugin doesn't supports callback because Promise and async/await are better choice.
 

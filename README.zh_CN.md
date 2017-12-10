@@ -10,7 +10,7 @@
 [npm-image]: https://img.shields.io/npm/v/egg-mongo-native.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/egg-mongo-native
 [travis-image]: https://img.shields.io/travis/brickyang/egg-mongo.svg?style=flat-square
-[travis-url]: https://travis-ci.org/brickyang/egg-mongo
+[travis-url]: https://travis-ci.org/brickyang/egg-mongo-native
 [codecov-image]: https://img.shields.io/codecov/c/github/brickyang/egg-mongo.svg?style=flat-square
 [codecov-url]: https://codecov.io/github/brickyang/egg-mongo?branch=master
 [david-image]: https://img.shields.io/david/brickyang/egg-mongo.svg?style=flat-square
@@ -27,13 +27,14 @@
 插件对一些常用 API 进行了简单封装以简化使用，同时保留了所有原版属性。例如，使用原版 API 进行一次查找需要写
 
 ```js
-db.collection('name')
- .find(query)
- .skip(skip)
- .limit(limit)
- .project(project)
- .sort(sort)
- .toArray();
+db
+  .collection('name')
+  .find(query)
+  .skip(skip)
+  .limit(limit)
+  .project(project)
+  .sort(sort)
+  .toArray();
 ```
 
 封装后
@@ -95,20 +96,20 @@ app.mongo.insertOne('name', args);
 目前插件提供的 API 包括：
 
 ```js
-connect()      // 不需要用户调用
-insertOne()
-findOneAndUpdate()
-findOneAndReplace()
-findOneAndDelete()
-insertMany()
-updateMany()
-deleteMany()
-find()
-count()
-distinct()
-createIndex()
-listCollection()
-createCollection()
+connect(); // 不需要用户调用
+insertOne();
+findOneAndUpdate();
+findOneAndReplace();
+findOneAndDelete();
+insertMany();
+updateMany();
+deleteMany();
+find();
+count();
+distinct();
+createIndex();
+listCollection();
+createCollection();
 ```
 
 当然，在任何时候你也都可以使用 `app.mongo.db` 调用所有 API。你可以在这里查看所有 API：[Node.js MongoDB Driver API](http://mongodb.github.io/node-mongodb-native/2.2/api/)。
@@ -122,9 +123,10 @@ createCollection()
 ```js
 // Promise
 function create(doc) {
-  app.mongo.insertOne('name', { doc })
-  .then(result => console.log(result))
-  .catch(error => console.error(error));
+  app.mongo
+    .insertOne('name', { doc })
+    .then(result => console.log(result))
+    .catch(error => console.error(error));
 }
 ```
 
@@ -137,16 +139,6 @@ async function create(doc) {
     const result = await app.mongo.insertOne('name', { doc });
     console.log(result);
   } catch (error) {
-    console.error(error);
-  }
-}
-
-// 使用 Generator
-function* create(doc) {
-  try {
-    const result = yield app.mongo.insertOne('name', { doc });
-    console.log(result);
-  } catch (errpr) {
     console.error(error);
   }
 }

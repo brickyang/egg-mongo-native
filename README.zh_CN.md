@@ -9,7 +9,7 @@
 
 [npm-image]: https://img.shields.io/npm/v/egg-mongo-native.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/egg-mongo-native
-[travis-image]: https://img.shields.io/travis/brickyang/egg-mongo.svg?style=flat-square
+[travis-image]: https://img.shields.io/travis/brickyang/egg-mongo-native.svg?branch=master&style=flat-square
 [travis-url]: https://travis-ci.org/brickyang/egg-mongo-native
 [codecov-image]: https://img.shields.io/codecov/c/github/brickyang/egg-mongo.svg?style=flat-square
 [codecov-url]: https://codecov.io/github/brickyang/egg-mongo?branch=master

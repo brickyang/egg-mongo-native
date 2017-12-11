@@ -1,5 +1,4 @@
-[![NPM version][npm-image]][npm-url]
-[![build status][travis-image]][travis-url]
+[![NPM version][npm-image]][npm-url] [![build status][travis-image]][travis-url]
 [![Test coverage][codecov-image]][codecov-url]
 [![David deps][david-image]][david-url]
 [![Known Vulnerabilities][snyk-image]][snyk-url]
@@ -20,9 +19,12 @@
 
 [**English**](https://github.com/brickyang/egg-mongo/blob/master/README.md)
 
-本插件基于 [node-mongodb-native](https://github.com/mongodb/node-mongodb-native)，提供了 MongoDB 官方 driver 及 API。
+本插件基于
+[node-mongodb-native](https://github.com/mongodb/node-mongodb-native)，提供了
+MongoDB 官方 driver 及 API。
 
-插件对一些常用 API 进行了简单封装以简化使用，同时保留了所有原版属性。例如，使用原版 API 进行一次查找需要写
+插件对一些常用 API 进行了简单封装以简化使用，同时保留了所有原版属性。例如，使用
+原版 API 进行一次查找需要写
 
 ```js
 db
@@ -61,13 +63,45 @@ exports.mongo = {
 
 ## 配置
 
-```javascript
+### 单实例
+
+```js
 // {app_root}/config/config.default.js
 exports.mongo = {
   client: {
-    host: 'localhost',
-    port: 27017,
+    host: 'host',
+    port: 'port',
     name: 'test',
+    user: 'user',
+    password: 'password',
+  },
+};
+```
+
+### 集群 (v2.1.0 以上 )
+
+```js
+// mongodb://host1:port1,host2:port2/name?replicaSet=test
+exports.mongo = {
+  client: {
+    host: 'host1, host2',
+    port: 'port1, port2',
+    name: 'name',
+    option: {
+      replicaSet: 'test',
+    },
+  },
+};
+
+// mongodb://host:port1,host:port2/name?replicaSet=test
+exports.mongo = {
+  client: {
+    host: 'host', // or ['host']
+    port: 'port1, port2', // or ['port1', 'port2']
+    name: 'name',
+    option: {
+      replicaSet: 'test',
+    },
   },
 };
 ```
@@ -76,7 +110,9 @@ exports.mongo = {
 
 ## 使用示例
 
-本插件提供的 API 只是对原版 API 进行了必要的简化，所有属性名称与原版 API 一致。所有针对文档操作的 API，通常接受 2 个参数，第一个参数是 collection 名称，第二个参数是一个对象，属性名即为原版 API 的所有参数。例如，使用原版 API 进行一次插入
+本插件提供的 API 只是对原版 API 进行了必要的简化，所有属性名称与原版 API 一致。
+所有针对文档操作的 API，通常接受 2 个参数，第一个参数是 collection 名称，第二个
+参数是一个对象，属性名即为原版 API 的所有参数。例如，使用原版 API 进行一次插入
 
 ```js
 db.collection('name').insertOne(doc, options);
@@ -110,11 +146,13 @@ listCollection();
 createCollection();
 ```
 
-当然，在任何时候你也都可以使用 `app.mongo.db` 调用所有 API。你可以在这里查看所有 API：[Node.js MongoDB Driver API](http://mongodb.github.io/node-mongodb-native/2.2/api/)。
+当然，在任何时候你也都可以使用 `app.mongo.db` 调用所有 API。你可以在这里查看所有
+API：[Node.js MongoDB Driver API](http://mongodb.github.io/node-mongodb-native/2.2/api/)。
 
 ## 同步与异步
 
-`node-mongodb-native` 所有 API 都支持 Promise，因此你可以自由地以异步或同步方式使用本插件。
+`node-mongodb-native` 所有 API 都支持 Promise，因此你可以自由地以异步或同步方式
+使用本插件。
 
 ### 异步
 
@@ -142,7 +180,8 @@ async function create(doc) {
 }
 ```
 
-如果你使用 `app.mongo.db` 调用原版 API，则也可以使用回调函数。插件封装的 API 不支持回调函数，因为 Promise 和 async/await 更加优雅。
+如果你使用 `app.mongo.db` 调用原版 API，则也可以使用回调函数。插件封装的 API 不
+支持回调函数，因为 Promise 和 async/await 更加优雅。
 
 Node.js 7.6 开始已经原生支持 async/await，不再需要 Babel。
 

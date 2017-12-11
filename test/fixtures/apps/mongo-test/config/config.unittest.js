@@ -1,3 +1,9 @@
 'use strict';
 
-exports.keys = '123456';
+exports.mongo = {
+  client: {
+    host: 'localhost',
+    port: 27017,
+    name: 'test',
+  },
+};

@@ -1,5 +1,4 @@
-[![NPM version][npm-image]][npm-url]
-[![build status][travis-image]][travis-url]
+[![NPM version][npm-image]][npm-url] [![build status][travis-image]][travis-url]
 [![Test coverage][codecov-image]][codecov-url]
 [![David deps][david-image]][david-url]
 [![Known Vulnerabilities][snyk-image]][snyk-url]
@@ -20,9 +19,12 @@
 
 [**中文版**](https://github.com/brickyang/egg-mongo/blob/master/README.zh_CN.md)
 
-This plugin base on [node-mongodb-native](https://github.com/mongodb/node-mongodb-native), provides the official MongoDB native driver and APIs.
+This plugin base on
+[node-mongodb-native](https://github.com/mongodb/node-mongodb-native), provides
+the official MongoDB native driver and APIs.
 
-It wraps some frequently-used API to make it easy to use but keep all properties as it is. For example, to find a document you need this with official API
+It wraps some frequently-used API to make it easy to use but keep all properties
+as it is. For example, to find a document you need this with official API
 
 ```js
 db
@@ -59,13 +61,45 @@ exports.mongo = {
 
 ## Configuration
 
+### Single Instance
+
 ```js
 // {app_root}/config/config.default.js
 exports.mongo = {
   client: {
-    host: 'localhost',
-    port: 27017,
+    host: 'host',
+    port: 'port',
     name: 'test',
+    user: 'user',
+    password: 'password',
+  },
+};
+```
+
+### Replica Set (v2.1.0 or higher)
+
+```js
+// mongodb://host1:port1,host2:port2/name?replicaSet=test
+exports.mongo = {
+  client: {
+    host: 'host1, host2',
+    port: 'port1, port2',
+    name: 'name',
+    option: {
+      replicaSet: 'test',
+    },
+  },
+};
+
+// mongodb://host:port1,host:port2/name?replicaSet=test
+exports.mongo = {
+  client: {
+    host: 'host', // or ['host']
+    port: 'port1, port2', // or ['port1', 'port2']
+    name: 'name',
+    option: {
+      replicaSet: 'test',
+    },
   },
 };
 ```
@@ -74,7 +108,9 @@ see [config/config.default.js](config/config.default.js) for more detail.
 
 ## Example
 
-The APIs provided by plugin usually need two arguments. The first is commonly the collection name, and the second is an object keeps the arguments of official API. For example, to insert one document with official API
+The APIs provided by plugin usually need two arguments. The first is commonly
+the collection name, and the second is an object keeps the arguments of official
+API. For example, to insert one document with official API
 
 ```js
 db.collection('name').insertOne(doc, options);
@@ -108,7 +144,9 @@ listCollection();
 createCollection();
 ```
 
-You can always use `app.mongo.db` to call all official APIs. You can check the APIs here: [Node.js MongoDB Driver API](http://mongodb.github.io/node-mongodb-native/2.2/api/).
+You can always use `app.mongo.db` to call all official APIs. You can check the
+APIs here:
+[Node.js MongoDB Driver API](http://mongodb.github.io/node-mongodb-native/2.2/api/).
 
 ## Promise
 
@@ -140,7 +178,9 @@ async function create(doc) {
 }
 ```
 
-If you use `app.mongo.db` you could use callback(usually the last argument), but this plugin doesn't supports callback because Promise and async/await are better choice.
+If you use `app.mongo.db` you could use callback(usually the last argument), but
+this plugin doesn't supports callback because Promise and async/await are better
+choice.
 
 ## License
 

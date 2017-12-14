@@ -106,6 +106,34 @@ exports.mongo = {
 };
 ```
 
+### 多个 database 配置
+
+> **不能 client 和 clients 都设置，否则会报错。**
+
+```js
+// {app_root}/config/config.default.js
+exports.mongo = {
+  clients: {
+    db1: {
+      host: 'host',
+      port: 'port',
+      name: 'db1',
+      user: 'user',
+      password: 'password',
+      option: {},
+    },
+    db2: {
+      host: 'host',
+      port: 'port',
+      name: 'db2',
+      user: 'user',
+      password: 'password',
+      option: {},
+    },
+  },
+};
+```
+
 请到 [config/config.default.js](config/config.default.js) 查看详细配置项说明。
 
 ## 使用示例
@@ -123,6 +151,13 @@ db.collection('name').insertOne(doc, options);
 ```js
 const args = { doc, options };
 app.mongo.insertOne('name', args);
+```
+
+multi database
+
+```js
+const args = { doc, options };
+app.mongo.get('db1').insertOne('name', args);
 ```
 
 可以看到 `args` 就是包含原版 API 参数的一个对象。

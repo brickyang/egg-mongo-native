@@ -15,18 +15,20 @@ describe('test/mongo.test.js', () => {
   });
 
   afterEach(async () => {
-    await app.mongo.deleteMany('test', {});
+    await app.mongo.get('test').deleteMany('test', {});
+    await app.mongo.get('test1').deleteMany('test', {});
     mm.restore();
   });
 
   after(async () => {
-    await app.mongo.deleteMany('test', {});
+    await app.mongo.get('test').deleteMany('test', {});
+    await app.mongo.get('test1').deleteMany('test', {});
     app.close();
   });
 
   describe('insertOne()', () => {
     it('should insert success', async () => {
-      const result = await app.mongo.insertOne(NAME, {
+      const result = await app.mongo.get('test').insertOne(NAME, {
         doc: { title: 'new doc' },
       });
       assert(result.insertedCount === 1);
@@ -37,7 +39,7 @@ describe('test/mongo.test.js', () => {
     });
 
     it('should insert empty document success', async () => {
-      const result = await app.mongo.insertOne(NAME);
+      const result = await app.mongo.get('test1').insertOne(NAME);
       assert(result.insertedCount === 1);
       assert(typeof result.insertedId === 'string');
       assert(result.value.hasOwnProperty('_id'));
@@ -47,7 +49,7 @@ describe('test/mongo.test.js', () => {
   describe('findOneAndUpdate()', () => {
     let id;
     beforeEach(async () => {
-      const result = await app.mongo.insertMany(NAME, {
+      const result = await app.mongo.get('test').insertMany(NAME, {
         docs: [
           { index: 1, title: 'new doc' },
           { index: 2, title: 'new doc' },
@@ -58,7 +60,7 @@ describe('test/mongo.test.js', () => {
     });
 
     it('should update success', async () => {
-      const result = await app.mongo.findOneAndUpdate(NAME, {
+      const result = await app.mongo.get('test').findOneAndUpdate(NAME, {
         filter: { _id: new ObjectID(id) },
         update: { title: 'update doc' },
       });
@@ -70,7 +72,7 @@ describe('test/mongo.test.js', () => {
     });
 
     it('should update success and return updated', async () => {
-      const result = await app.mongo.findOneAndUpdate(NAME, {
+      const result = await app.mongo.get('test').findOneAndUpdate(NAME, {
         filter: { _id: new ObjectID(id) },
         update: { title: 'update doc' },
         options: { returnOriginal: false },
@@ -83,7 +85,7 @@ describe('test/mongo.test.js', () => {
     });
 
     it('should update success with sort', async () => {
-      const result = await app.mongo.findOneAndUpdate(NAME, {
+      const result = await app.mongo.get('test').findOneAndUpdate(NAME, {
         filter: { _id: new ObjectID(id) },
         update: { title: 'update doc' },
         options: { sort: { _id: 1 } },
@@ -95,7 +97,7 @@ describe('test/mongo.test.js', () => {
     });
 
     it('should update success with empty args', async () => {
-      const result = await app.mongo.findOneAndUpdate(NAME);
+      const result = await app.mongo.get('test').findOneAndUpdate(NAME);
       assert(result.ok === 1);
       assert(result.value.index === 3);
       assert(result.value.title === 'new doc');
@@ -104,7 +106,7 @@ describe('test/mongo.test.js', () => {
     });
 
     it('should upsert success', async () => {
-      const result = await app.mongo.findOneAndUpdate(NAME, {
+      const result = await app.mongo.get('test').findOneAndUpdate(NAME, {
         filter: { title: 'upsert' },
         options: { upsert: true, returnOriginal: false },
       });
@@ -120,13 +122,13 @@ describe('test/mongo.test.js', () => {
     let id;
     beforeEach(
       async () =>
-        ({ insertedId: id } = await app.mongo.insertOne(NAME, {
+        ({ insertedId: id } = await app.mongo.get('test').insertOne(NAME, {
           doc: { title: 'new doc' },
         }))
     );
 
     it('should replace success', async () => {
-      const result = await app.mongo.findOneAndReplace(NAME, {
+      const result = await app.mongo.get('test').findOneAndReplace(NAME, {
         filter: { _id: new ObjectID(id) },
         replacement: { doc: 'replace' },
       });
@@ -137,7 +139,7 @@ describe('test/mongo.test.js', () => {
     });
 
     it('should replace success and return replaced', async () => {
-      const result = await app.mongo.findOneAndReplace(NAME, {
+      const result = await app.mongo.get('test').findOneAndReplace(NAME, {
         filter: { _id: new ObjectID(id) },
         replacement: { doc: 'replace' },
         options: { returnOriginal: false },
@@ -150,7 +152,7 @@ describe('test/mongo.test.js', () => {
     });
 
     it('should replace success with empty args', async () => {
-      const result = await app.mongo.findOneAndReplace(NAME);
+      const result = await app.mongo.get('test').findOneAndReplace(NAME);
       assert(result.ok === 1);
       assert(result.value._id.toString() === id);
       assert(result.value.title === 'new doc');
@@ -159,7 +161,7 @@ describe('test/mongo.test.js', () => {
     });
 
     it('should upsert success', async () => {
-      const result = await app.mongo.findOneAndReplace(NAME, {
+      const result = await app.mongo.get('test').findOneAndReplace(NAME, {
         filter: { title: 'upsert' },
         replacement: { doc: 'replace' },
         options: { upsert: true, returnOriginal: false },
@@ -175,14 +177,14 @@ describe('test/mongo.test.js', () => {
   describe('findOneAndDelete()', () => {
     let id;
     beforeEach(async () => {
-      const result = await app.mongo.insertMany(NAME, {
+      const result = await app.mongo.get('test').insertMany(NAME, {
         docs: [{ title: 'new doc' }, { title: 'new doc' }],
       });
       id = result.insertedIds[0].toString();
     });
 
     it('should delete success', async () => {
-      const result = await app.mongo.findOneAndDelete(NAME, {
+      const result = await app.mongo.get('test').findOneAndDelete(NAME, {
         filter: { _id: new ObjectID(id) },
       });
       assert(result.ok === 1);
@@ -191,7 +193,7 @@ describe('test/mongo.test.js', () => {
     });
 
     it('should delete success with sort', async () => {
-      const result = await app.mongo.findOneAndDelete(NAME, {
+      const result = await app.mongo.get('test').findOneAndDelete(NAME, {
         filter: {},
         options: { sort: { id: 1 } },
       });
@@ -202,7 +204,7 @@ describe('test/mongo.test.js', () => {
     });
 
     it('should delete success with empty filter', async () => {
-      const result = await app.mongo.findOneAndDelete(NAME, { filter: {} });
+      const result = await app.mongo.get('test').findOneAndDelete(NAME, { filter: {} });
       assert(result.ok === 1);
       assert(result.value._id.toString() !== id);
       assert(result.value.title === 'new doc');
@@ -211,7 +213,7 @@ describe('test/mongo.test.js', () => {
 
     it('should replace fail with empty args', async () => {
       try {
-        await app.mongo.findOneAndDelete(NAME);
+        await app.mongo.get('test').findOneAndDelete(NAME);
       } catch (error) {
         assert(error instanceof Error);
       }
@@ -220,7 +222,7 @@ describe('test/mongo.test.js', () => {
 
   describe('insertMany()', () => {
     it('should insert success', async () => {
-      const result = await app.mongo.insertMany(NAME, {
+      const result = await app.mongo.get('test').insertMany(NAME, {
         docs: [{ title: 'doc1' }, { title: 'doc2' }, { title: 'doc3' }],
       });
       assert(result.insertedCount === 3);
@@ -232,7 +234,7 @@ describe('test/mongo.test.js', () => {
 
     it('should insert fail with empty args', async () => {
       try {
-        await app.mongo.insertMany(NAME);
+        await app.mongo.get('test').insertMany(NAME);
       } catch (error) {
         assert(error instanceof Error);
       }
@@ -242,7 +244,7 @@ describe('test/mongo.test.js', () => {
   describe('updateMany()', async () => {
     beforeEach(
       async () =>
-        await app.mongo.insertMany(NAME, {
+        await app.mongo.get('test').insertMany(NAME, {
           docs: [
             { title: 'doc1', type: 'doc' },
             { title: 'doc2', type: 'doc' },
@@ -252,10 +254,10 @@ describe('test/mongo.test.js', () => {
         })
     );
 
-    afterEach(async () => await app.mongo.deleteMany(NAME, {}));
+    afterEach(async () => await app.mongo.get('test').deleteMany(NAME, {}));
 
     it('should update success', async () => {
-      const result = await app.mongo.updateMany(NAME, {
+      const result = await app.mongo.get('test').updateMany(NAME, {
         filter: { type: 'doc' },
         update: { $set: { type: 'update' } },
       });
@@ -266,7 +268,7 @@ describe('test/mongo.test.js', () => {
     });
 
     it('should update success all doc', async () => {
-      const result = await app.mongo.updateMany(NAME, {
+      const result = await app.mongo.get('test').updateMany(NAME, {
         update: { $set: { type: 'update' } },
       });
       assert(result.matchedCount === 4);
@@ -277,7 +279,7 @@ describe('test/mongo.test.js', () => {
 
     it('should update fail with no update', async () => {
       try {
-        await app.mongo.updateMany(NAME, { filter: { type: 'doc' } });
+        await app.mongo.get('test').updateMany(NAME, { filter: { type: 'doc' } });
       } catch (error) {
         assert(error instanceof Error);
       }
@@ -285,14 +287,14 @@ describe('test/mongo.test.js', () => {
 
     it('should update fail with empty args', async () => {
       try {
-        await app.mongo.updateMany(NAME);
+        await app.mongo.get('test').updateMany(NAME);
       } catch (error) {
         assert(error instanceof Error);
       }
     });
 
     it('should upsert success', async () => {
-      const result = await app.mongo.updateMany(NAME, {
+      const result = await app.mongo.get('test').updateMany(NAME, {
         filter: { doc: 'doc5' },
         update: { $set: { type: 'update' } },
         options: { upsert: true },
@@ -308,7 +310,7 @@ describe('test/mongo.test.js', () => {
   describe('deleteMany()', () => {
     beforeEach(
       async () =>
-        await app.mongo.insertMany(NAME, {
+        await app.mongo.get('test').insertMany(NAME, {
           docs: [
             { title: 'doc1', type: 'doc' },
             { title: 'doc2', type: 'doc' },
@@ -318,17 +320,17 @@ describe('test/mongo.test.js', () => {
         })
     );
 
-    afterEach(async () => await app.mongo.deleteMany(NAME, {}));
+    afterEach(async () => await app.mongo.get('test').deleteMany(NAME, {}));
 
     it('should delete success', async () => {
-      const result = await app.mongo.deleteMany(NAME, {
+      const result = await app.mongo.get('test').deleteMany(NAME, {
         filter: { type: 'doc' },
       });
       assert(result === 2);
     });
 
     it('should delete all success', async () => {
-      const result = await app.mongo.deleteMany(NAME);
+      const result = await app.mongo.get('test').deleteMany(NAME);
       assert(result === 4);
     });
   });
@@ -336,7 +338,7 @@ describe('test/mongo.test.js', () => {
   describe('find()', () => {
     beforeEach(
       async () =>
-        await app.mongo.insertMany(NAME, {
+        await app.mongo.get('test').insertMany(NAME, {
           docs: [
             { index: 1, type: 'doc' },
             { index: 2, type: 'doc' },
@@ -346,7 +348,7 @@ describe('test/mongo.test.js', () => {
     );
 
     it('should find success', async () => {
-      const result = await app.mongo.find(NAME, {
+      const result = await app.mongo.get('test').find(NAME, {
         query: { type: 'doc' },
       });
       assert(Array.isArray(result));
@@ -354,31 +356,31 @@ describe('test/mongo.test.js', () => {
     });
 
     it('should find success with limit', async () => {
-      const result = await app.mongo.find(NAME, { limit: 1 });
+      const result = await app.mongo.get('test').find(NAME, { limit: 1 });
       assert(Array.isArray(result));
       assert(result.length === 1);
     });
 
     it('should find success with skip', async () => {
-      const result = await app.mongo.find(NAME, { skip: 1 });
+      const result = await app.mongo.get('test').find(NAME, { skip: 1 });
       assert(Array.isArray(result));
       assert(result.length === 2);
     });
 
     it('should find success with project', async () => {
-      const result = await app.mongo.find(NAME, { project: { index: 1 } });
+      const result = await app.mongo.get('test').find(NAME, { project: { index: 1 } });
       assert(result[0].hasOwnProperty('index'));
       assert(!result[0].hasOwnProperty('type'));
     });
 
     it('should find success with sort', async () => {
-      const result = await app.mongo.find(NAME, { sort: { index: -1 } });
+      const result = await app.mongo.get('test').find(NAME, { sort: { index: -1 } });
       assert(result[0].index > result[1].index);
       assert(result[1].index > result[2].index);
     });
 
     it('should find success with empty args', async () => {
-      const result = await app.mongo.find(NAME);
+      const result = await app.mongo.get('test').find(NAME);
       assert(Array.isArray(result));
       assert(result.length === 3);
     });
@@ -387,7 +389,7 @@ describe('test/mongo.test.js', () => {
   describe('count()', () => {
     beforeEach(
       async () =>
-        await app.mongo.insertMany(NAME, {
+        await app.mongo.get('test').insertMany(NAME, {
           docs: [
             { type: 'doc' },
             { type: 'doc' },
@@ -398,14 +400,14 @@ describe('test/mongo.test.js', () => {
     );
 
     it('should count success', async () => {
-      const result = await app.mongo.count(NAME, {
+      const result = await app.mongo.get('test').count(NAME, {
         query: { type: 'doc' },
       });
       assert(result === 2);
     });
 
     it('should count all success', async () => {
-      const result = await app.mongo.count(NAME);
+      const result = await app.mongo.get('test').count(NAME);
       assert(result === 4);
     });
   });
@@ -413,7 +415,7 @@ describe('test/mongo.test.js', () => {
   describe('distinct()', () => {
     beforeEach(
       async () =>
-        await app.mongo.insertMany(NAME, {
+        await app.mongo.get('test').insertMany(NAME, {
           docs: [
             { type: 'doc' },
             { type: 'doc' },
@@ -424,7 +426,7 @@ describe('test/mongo.test.js', () => {
     );
 
     it('should distinct success', async () => {
-      const result = await app.mongo.distinct(NAME, {
+      const result = await app.mongo.get('test').distinct(NAME, {
         key: 'type',
       });
       assert(Array.isArray(result));
@@ -432,7 +434,7 @@ describe('test/mongo.test.js', () => {
     });
 
     it('should distince success with query', async () => {
-      const result = await app.mongo.distinct(NAME, {
+      const result = await app.mongo.get('test').distinct(NAME, {
         key: 'type',
         query: { type: 'doc' },
       });
@@ -441,21 +443,21 @@ describe('test/mongo.test.js', () => {
     });
 
     it('should distince success with no key', async () => {
-      const result = await app.mongo.distinct(NAME);
+      const result = await app.mongo.get('test').distinct(NAME);
       assert.deepEqual(result, []);
     });
   });
 
   describe('createIndex()', () => {
     it('should create index success', async () => {
-      const result = await app.mongo.createIndex(NAME, {
+      const result = await app.mongo.get('test').createIndex(NAME, {
         fieldOrSpec: { title: -1 },
       });
       assert(result === 'title_-1');
     });
 
     it('should create index success', async () => {
-      const result = await app.mongo.createIndex(NAME, {
+      const result = await app.mongo.get('test').createIndex(NAME, {
         fieldOrSpec: 'title',
       });
       assert(result === 'title_1');
@@ -463,7 +465,7 @@ describe('test/mongo.test.js', () => {
 
     it('should create index fail with empty keys', async () => {
       try {
-        await app.mongo.createIndex(NAME, { fieldOrSpec: {} });
+        await app.mongo.get('test').createIndex(NAME, { fieldOrSpec: {} });
       } catch (error) {
         assert(error instanceof Error);
       }
@@ -471,7 +473,7 @@ describe('test/mongo.test.js', () => {
 
     it('should create index fail with empty args', async () => {
       try {
-        await app.mongo.createIndex(NAME);
+        await app.mongo.get('test').createIndex(NAME);
       } catch (error) {
         assert(error instanceof Error);
       }
@@ -480,14 +482,14 @@ describe('test/mongo.test.js', () => {
 
   describe('createCollection() && listCollections()', () => {
     it('should create && list collection success', async () => {
-      await app.mongo.createCollection({ name: 'create' });
-      const result = await app.mongo.listCollections();
+      await app.mongo.get('test').createCollection({ name: 'create' });
+      const result = await app.mongo.get('test').listCollections();
       assert(result.indexOf('create') !== -1);
     });
 
     it('should create fail with empty args', async () => {
       try {
-        await app.mongo.createCollection();
+        await app.mongo.get('test').createCollection();
       } catch (error) {
         assert(error instanceof Error);
       }

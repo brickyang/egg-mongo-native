@@ -1,9 +1,14 @@
 'use strict';
 
 exports.mongo = {
-  client: {
-    host: 'localhost',
-    port: 27017,
-    name: 'test',
+  clients: {
+    test: {
+      host: 'localhost',
+      name: 'test',
+    },
+    test1: {
+      host: 'localhost',
+      name: 'test1',
+    },
   },
 };

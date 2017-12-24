@@ -6,9 +6,11 @@
  * @property {String} SOME_KEY - some description
  */
 exports.mongo = {
-  client: {
+  default: {
     host: 'localhost',
     port: 27017,
     name: 'test',
   },
+  app: true,
+  agent: false,
 };

@@ -104,6 +104,34 @@ exports.mongo = {
 };
 ```
 
+### multi database config
+
+> **Can not set client and clients both.**
+
+```js
+// {app_root}/config/config.default.js
+exports.mongo = {
+  clients: {
+    db1: {
+      host: 'host',
+      port: 'port',
+      name: 'db1',
+      user: 'user',
+      password: 'password',
+      option: {},
+    },
+    db2: {
+      host: 'host',
+      port: 'port',
+      name: 'db2',
+      user: 'user',
+      password: 'password',
+      option: {},
+    },
+  },
+};
+```
+
 see [config/config.default.js](config/config.default.js) for more detail.
 
 ## Example
@@ -121,6 +149,13 @@ and with plugin API
 ```js
 const args = { doc, options };
 app.mongo.insertOne('name', args);
+```
+
+multi database
+
+```js
+const args = { doc, options };
+app.mongo.get('db1').insertOne('name', args);
 ```
 
 The `args` is the object provides the arguments to official API.

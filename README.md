@@ -104,9 +104,9 @@ exports.mongo = {
 };
 ```
 
-### multi database config
+### Multiple Instances
 
-> **Can not set client and clients both.**
+> **Can not set `client` and `clients` both.**
 
 ```js
 // {app_root}/config/config.default.js
@@ -151,7 +151,7 @@ const args = { doc, options };
 app.mongo.insertOne('name', args);
 ```
 
-multi database
+Multiple Instances
 
 ```js
 const args = { doc, options };

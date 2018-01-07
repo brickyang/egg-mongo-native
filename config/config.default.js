@@ -6,11 +6,34 @@
  * @property {String} SOME_KEY - some description
  */
 exports.mongo = {
-  default: {
-    host: 'localhost',
-    port: 27017,
-    name: 'test',
-  },
-  app: true,
-  agent: false,
+  // Single Instance
+  // client: {
+  //   host: 'localhost',
+  //   port: 27017,
+  //   name: 'test',
+  // },
+
+  // Replica Set
+  // client: {
+  //   host: [ 'host1', 'host2' ],
+  //   port: [ 'port1', 'port2' ],
+  //   name: 'test',
+  //   option: {
+  //     replicaSet: 'test',
+  //   },
+  // },
+
+  // Multi Instances
+  // clients: {
+  //   foo: {
+  //     host: 'localhost',
+  //     port: 27017,
+  //     name: 'foo',
+  //   },
+  //   bar: {
+  //     host: 'localhost',
+  //     port: 27017,
+  //     name: 'bar',
+  //   },
+  // },
 };

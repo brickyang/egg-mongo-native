@@ -106,9 +106,9 @@ exports.mongo = {
 };
 ```
 
-### 多个 database 配置
+### 多个数据库实例配置
 
-> **不能 client 和 clients 都设置，否则会报错。**
+> **不能 `client` 和 `clients` 都设置，否则会报错。**
 
 ```js
 // {app_root}/config/config.default.js
@@ -154,7 +154,7 @@ const args = { doc, options };
 app.mongo.insertOne('name', args);
 ```
 
-multi database
+多个数据库实例
 
 ```js
 const args = { doc, options };

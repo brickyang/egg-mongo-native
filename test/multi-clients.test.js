@@ -2,7 +2,7 @@
 const mm = require('egg-mock');
 const assert = require('assert');
 
-describe('test/mongo.test.js', () => {
+describe('test/mongo-clients.test.js', () => {
   let app;
   let NAME;
   before(async () => {

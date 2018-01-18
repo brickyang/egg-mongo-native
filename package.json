@@ -14,17 +14,16 @@
     "mongo-driver"
   ],
   "dependencies": {
+    "@types/mongodb": "^2.2.0",
     "mongodb": "^2.2.0"
   },
   "devDependencies": {
-    "autod": "^3.0.1",
-    "autod-egg": "^1.0.0",
-    "egg": "^2.0.0",
-    "egg-bin": "^4.3.6",
+    "egg": "^2.2.0",
+    "egg-bin": "^4.3.7",
     "egg-ci": "^1.8.0",
-    "egg-mock": "^3.13.1",
-    "eslint": "^4.13.0",
-    "eslint-config-egg": "^5.1.1",
+    "egg-mock": "^3.14.0",
+    "eslint": "^4.15.0",
+    "eslint-config-egg": "^6.0.0",
     "supertest": "^3.0.0",
     "webstorm-disable-index": "^1.2.0"
   },
@@ -37,8 +36,7 @@
     "cov": "egg-bin cov",
     "lint": "eslint .",
     "ci": "npm run pkgfiles --check && npm run lint && npm run cov",
-    "pkgfiles": "egg-bin pkgfiles",
-    "autod": "autod"
+    "pkgfiles": "egg-bin pkgfiles"
   },
   "files": ["config", "app.js", "lib"],
   "ci": {

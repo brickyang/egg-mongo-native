@@ -1,5 +1,5 @@
 'use strict';
-const mm = require('egg-mock');
+const mock = require('egg-mock');
 const assert = require('assert');
 const { ObjectID } = require('mongodb');
 
@@ -8,19 +8,19 @@ describe('test/mongo.test.js', () => {
   let NAME;
   before(async () => {
     NAME = 'test';
-    app = mm.app({
+    app = mock.app({
       baseDir: 'apps/mongo-test',
     });
     await app.ready();
   });
 
   afterEach(async () => {
-    await app.mongo.deleteMany('test', {});
-    mm.restore();
+    await app.mongo.deleteMany(NAME, {});
+    mock.restore();
   });
 
   after(async () => {
-    await app.mongo.deleteMany('test', {});
+    await app.mongo.deleteMany(NAME, {});
     app.close();
   });
 
@@ -491,6 +491,29 @@ describe('test/mongo.test.js', () => {
       } catch (error) {
         assert(error instanceof Error);
       }
+    });
+  });
+
+  describe('aggregate()', () => {
+    const docs = [
+      { type: 'doc1' },
+      { type: 'doc2' },
+      { type: 'doc3' },
+      { type: 'doc4' },
+    ];
+    beforeEach(async () => await app.mongo.insertMany(NAME, { docs }));
+
+    it('should success', async () => {
+      const [ result ] = await app.mongo.aggregate(NAME, [
+        { $match: {} },
+        {
+          $group: {
+            _id: null,
+            count: { $sum: 1 },
+          },
+        },
+      ]);
+      assert.equal(result.count, docs.length);
     });
   });
 });

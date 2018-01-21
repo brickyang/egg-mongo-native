@@ -177,6 +177,7 @@ distinct();
 createIndex();
 listCollection();
 createCollection();
+aggregate(); // v2.2.0 above
 ```
 
 You can always use `app.mongo.db` to call all official APIs. You can check the

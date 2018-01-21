@@ -1,4 +1,5 @@
 import {
+  ObjectId,
   CollectionInsertOneOptions,
   UpdateWriteOpResult,
   Collection,
@@ -70,7 +71,7 @@ declare class MongoDB {
     args: { filter: any; options?: CollectionOptions }
   ): Promise<number>;
 
-  public find(
+  public find<T = any>(
     name: string,
     args: {
       query: any;
@@ -79,7 +80,7 @@ declare class MongoDB {
       project?: any;
       sort?: { [key: string]: number };
     }
-  ): Promise<any[]>;
+  ): Promise<T[]>;
 
   public count(
     name: string,
@@ -87,7 +88,7 @@ declare class MongoDB {
       query: any;
       options?: MongoCountPreferences;
     }
-  ): number;
+  ): Promise<number>;
 
   public distinct(
     name: string,
@@ -96,7 +97,7 @@ declare class MongoDB {
       query?: any;
       options?: { readPreference?: ReadPreference | string };
     }
-  ): Promise<any[]>;
+  ): Promise<string[]>;
 
   public createIndex(
     name: string,
@@ -113,7 +114,7 @@ declare class MongoDB {
     options?: CollectionCreateOptions;
   }): Promise<Collection>;
 
-  public aggregate(name: string, pipeline: Object[]): Promise<any[]>;
+  public aggregate<T = any>(name: string, pipeline: Object[]): Promise<T[]>;
 }
 
 export default MongoDB;

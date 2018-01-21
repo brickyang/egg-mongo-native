@@ -38,11 +38,7 @@
     "ci": "npm run pkgfiles --check && npm run lint && npm run cov",
     "pkgfiles": "egg-bin pkgfiles"
   },
-  "files": [
-    "config",
-    "app.js",
-    "lib"
-  ],
+  "files": ["config", "app.js", "lib", "index.d.ts"],
   "ci": {
     "version": "8, 9"
   },

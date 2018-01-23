@@ -1,5 +1,4 @@
 import {
-  ObjectId,
   CollectionInsertOneOptions,
   UpdateWriteOpResult,
   Collection,
@@ -15,6 +14,8 @@ import {
   CollectionOptions,
   CollectionCreateOptions,
 } from 'mongodb';
+
+export { ObjectId } from 'mongodb';
 
 declare class MongoDB {
   public db: Db;
@@ -114,6 +115,13 @@ declare class MongoDB {
     options?: CollectionCreateOptions;
   }): Promise<Collection>;
 
+  public aggregate<T = any>(
+    name: string,
+    args: { pipeline: Object[] }
+  ): Promise<T[]>;
+  /**
+   * @deprecated
+   */
   public aggregate<T = any>(name: string, pipeline: Object[]): Promise<T[]>;
 }
 

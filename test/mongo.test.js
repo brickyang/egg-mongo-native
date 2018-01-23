@@ -7,6 +7,7 @@ describe('test/mongo.test.js', () => {
   let app;
   let NAME;
   before(async () => {
+    mock.consoleLevel('NONE');
     NAME = 'test';
     app = mock.app({
       baseDir: 'apps/mongo-test',
@@ -15,226 +16,295 @@ describe('test/mongo.test.js', () => {
   });
 
   afterEach(async () => {
-    await app.mongo.deleteMany(NAME, {});
+    await app.mongo.deleteMany(NAME, { filter: {} });
     mock.restore();
   });
 
   after(async () => {
-    await app.mongo.deleteMany(NAME, {});
+    await app.mongo.deleteMany(NAME, { filter: {} });
     app.close();
   });
 
   describe('insertOne()', () => {
-    it('should insert success', async () => {
-      const result = await app.mongo.insertOne(NAME, {
-        doc: { title: 'new doc' },
-      });
-      assert(result.insertedCount === 1);
-      assert(typeof result.insertedId === 'string');
-      assert(result.value.hasOwnProperty('_id'));
-      assert(result.value.hasOwnProperty('title'));
-      assert(result.value.title === 'new doc');
+    it('should success', async () => {
+      const doc = { title: 'new doc' };
+      const result = await app.mongo.insertOne(NAME, { doc });
+
+      const {
+        insertedCount,
+        insertedId,
+        ops,
+        connection,
+        result: { ok, n },
+      } = result;
+      assert.equal(insertedCount, 1);
+      assert.equal(typeof insertedId, 'object');
+      assert(ops[0].hasOwnProperty('_id'));
+      assert.equal(ops[0].title, 'new doc');
+      assert.equal(typeof connection, 'object');
+      assert.equal(ok, 1);
+      assert.equal(n, 1);
     });
 
     it('should insert empty document success', async () => {
       const result = await app.mongo.insertOne(NAME);
-      assert(result.insertedCount === 1);
-      assert(typeof result.insertedId === 'string');
-      assert(result.value.hasOwnProperty('_id'));
-    });
-  });
-
-  describe('findOneAndUpdate()', () => {
-    let id;
-    beforeEach(async () => {
-      const result = await app.mongo.insertMany(NAME, {
-        docs: [
-          { index: 1, title: 'new doc' },
-          { index: 2, title: 'new doc' },
-          { index: 3, title: 'new doc' },
-        ],
-      });
-      id = result.insertedIds[0].toString();
-    });
-
-    it('should update success', async () => {
-      const result = await app.mongo.findOneAndUpdate(NAME, {
-        filter: { _id: new ObjectID(id) },
-        update: { title: 'update doc' },
-      });
-      assert(result.ok === 1);
-      assert(result.value._id.toString() === id);
-      assert(result.value.title === 'new doc');
-      assert(result.lastErrorObject.updatedExisting);
-      assert(result.lastErrorObject.n === 1);
-    });
-
-    it('should update success and return updated', async () => {
-      const result = await app.mongo.findOneAndUpdate(NAME, {
-        filter: { _id: new ObjectID(id) },
-        update: { title: 'update doc' },
-        options: { returnOriginal: false },
-      });
-      assert(result.ok === 1);
-      assert(result.value._id.toString() === id);
-      assert(result.value.title === 'update doc');
-      assert(result.lastErrorObject.updatedExisting);
-      assert(result.lastErrorObject.n === 1);
-    });
-
-    it('should update success with sort', async () => {
-      const result = await app.mongo.findOneAndUpdate(NAME, {
-        filter: { _id: new ObjectID(id) },
-        update: { title: 'update doc' },
-        options: { sort: { _id: 1 } },
-      });
-      assert(result.ok === 1);
-      assert(result.value._id.toString() === id);
-      assert(result.lastErrorObject.updatedExisting);
-      assert(result.lastErrorObject.n === 1);
-    });
-
-    it('should update success with empty args', async () => {
-      const result = await app.mongo.findOneAndUpdate(NAME);
-      assert(result.ok === 1);
-      assert(result.value.index === 3);
-      assert(result.value.title === 'new doc');
-      assert(result.lastErrorObject.updatedExisting);
-      assert(result.lastErrorObject.n === 1);
-    });
-
-    it('should upsert success', async () => {
-      const result = await app.mongo.findOneAndUpdate(NAME, {
-        filter: { title: 'upsert' },
-        options: { upsert: true, returnOriginal: false },
-      });
-      assert(result.ok === 1);
-      assert(result.value !== null);
-      assert(!result.lastErrorObject.updatedExisting);
-      assert(result.lastErrorObject.n === 1);
-      assert(result.lastErrorObject.hasOwnProperty('upserted'));
-    });
-  });
-
-  describe('findOneAndReplace()', () => {
-    let id;
-    beforeEach(
-      async () =>
-        ({ insertedId: id } = await app.mongo.insertOne(NAME, {
-          doc: { title: 'new doc' },
-        }))
-    );
-
-    it('should replace success', async () => {
-      const result = await app.mongo.findOneAndReplace(NAME, {
-        filter: { _id: new ObjectID(id) },
-        replacement: { doc: 'replace' },
-      });
-      assert(result.ok === 1);
-      assert(result.value.title === 'new doc');
-      assert(result.lastErrorObject.updatedExisting);
-      assert(result.lastErrorObject.n === 1);
-    });
-
-    it('should replace success and return replaced', async () => {
-      const result = await app.mongo.findOneAndReplace(NAME, {
-        filter: { _id: new ObjectID(id) },
-        replacement: { doc: 'replace' },
-        options: { returnOriginal: false },
-      });
-      assert(result.ok === 1);
-      assert(!result.value.hasOwnProperty('title'));
-      assert(result.value.doc === 'replace');
-      assert(result.lastErrorObject.updatedExisting);
-      assert(result.lastErrorObject.n === 1);
-    });
-
-    it('should replace success with empty args', async () => {
-      const result = await app.mongo.findOneAndReplace(NAME);
-      assert(result.ok === 1);
-      assert(result.value._id.toString() === id);
-      assert(result.value.title === 'new doc');
-      assert(result.lastErrorObject.updatedExisting);
-      assert(result.lastErrorObject.n === 1);
-    });
-
-    it('should upsert success', async () => {
-      const result = await app.mongo.findOneAndReplace(NAME, {
-        filter: { title: 'upsert' },
-        replacement: { doc: 'replace' },
-        options: { upsert: true, returnOriginal: false },
-      });
-      assert(result.ok === 1);
-      assert(result.value !== null);
-      assert(!result.lastErrorObject.updatedExisting);
-      assert(result.lastErrorObject.n === 1);
-      assert(result.lastErrorObject.hasOwnProperty('upserted'));
-    });
-  });
-
-  describe('findOneAndDelete()', () => {
-    let id;
-    beforeEach(async () => {
-      const result = await app.mongo.insertMany(NAME, {
-        docs: [{ title: 'new doc' }, { title: 'new doc' }],
-      });
-      id = result.insertedIds[0].toString();
-    });
-
-    it('should delete success', async () => {
-      const result = await app.mongo.findOneAndDelete(NAME, {
-        filter: { _id: new ObjectID(id) },
-      });
-      assert(result.ok === 1);
-      assert(result.value.title === 'new doc');
-      assert(result.lastErrorObject.n === 1);
-    });
-
-    it('should delete success with sort', async () => {
-      const result = await app.mongo.findOneAndDelete(NAME, {
-        filter: {},
-        options: { sort: { id: 1 } },
-      });
-      assert(result.ok === 1);
-      assert(result.value._id.toString() === id);
-      assert(result.value.title === 'new doc');
-      assert(result.lastErrorObject.n === 1);
-    });
-
-    it('should delete success with empty filter', async () => {
-      const result = await app.mongo.findOneAndDelete(NAME, { filter: {} });
-      assert(result.ok === 1);
-      assert(result.value._id.toString() !== id);
-      assert(result.value.title === 'new doc');
-      assert(result.lastErrorObject.n === 1);
-    });
-
-    it('should replace fail with empty args', async () => {
-      try {
-        await app.mongo.findOneAndDelete(NAME);
-      } catch (error) {
-        assert(error instanceof Error);
-      }
+      const {
+        insertedCount,
+        insertedId,
+        ops,
+        connection,
+        result: { ok, n },
+      } = result;
+      assert.equal(insertedCount, 1);
+      assert.equal(typeof insertedId, 'object');
+      assert(ops[0].hasOwnProperty('_id'));
+      assert.equal(typeof connection, 'object');
+      assert.equal(ok, 1);
+      assert.equal(n, 1);
     });
   });
 
   describe('insertMany()', () => {
-    it('should insert success', async () => {
-      const result = await app.mongo.insertMany(NAME, {
-        docs: [{ title: 'doc1' }, { title: 'doc2' }, { title: 'doc3' }],
-      });
-      assert(result.insertedCount === 3);
-      assert(Array.isArray(result.insertedIds));
-      assert(Array.isArray(result.value));
-      assert(result.insertedIds.length === 3);
-      assert(result.value.length === 3);
+    it('should success', async () => {
+      const docs = [{ title: 'doc1' }, { title: 'doc2' }, { title: 'doc3' }];
+      const result = await app.mongo.insertMany(NAME, { docs });
+
+      const { insertedCount, insertedIds, ops, result: { ok, n } } = result;
+      assert.equal(insertedCount, 3);
+      assert.equal(typeof insertedIds, 'object');
+      assert.equal(Object.keys(result.insertedIds).length, 3);
+      assert(Array.isArray(ops));
+      assert.equal(ops.length, 3);
+      assert.equal(ok, 1);
+      assert.equal(n, 3);
     });
 
-    it('should insert fail with empty args', async () => {
+    it('should error with null args', async () => {
       try {
         await app.mongo.insertMany(NAME);
       } catch (error) {
         assert(error instanceof Error);
+        assert(error.name === 'MongoError');
+      }
+    });
+
+    it('should error with non-array docs', async () => {
+      try {
+        await app.mongo.insertMany(NAME, { docs: 'docs' });
+      } catch (error) {
+        assert(error instanceof Error);
+        assert(error.name === 'MongoError');
+      }
+    });
+  });
+
+  describe('findOneAndUpdate()', () => {
+    let _id;
+    let docs;
+    beforeEach(async () => {
+      docs = [
+        { index: 1, title: 'new doc' },
+        { index: 2, title: 'new doc' },
+        { index: 3, title: 'new doc' },
+      ];
+      const result = await app.mongo.insertMany(NAME, { docs });
+      _id = result.insertedIds[0];
+    });
+
+    it('should success', async () => {
+      const filter = { _id };
+      const update = { title: 'update doc' };
+      const result = await app.mongo.findOneAndUpdate(NAME, { filter, update });
+
+      const { value, ok, lastErrorObject: { n, updatedExisting } } = result;
+      assert.deepEqual(value._id, _id);
+      assert.equal(value.title, 'new doc');
+      assert.equal(ok, 1);
+      assert.equal(n, 1);
+      assert(updatedExisting);
+    });
+
+    it('should success and return updated', async () => {
+      const result = await app.mongo.findOneAndUpdate(NAME, {
+        filter: { _id },
+        update: { title: 'update doc' },
+        options: { returnOriginal: false },
+      });
+
+      const { value, ok, lastErrorObject: { n, updatedExisting } } = result;
+      assert.deepEqual(value._id, _id);
+      assert.equal(value.title, 'update doc');
+      assert.equal(ok, 1);
+      assert.equal(n, 1);
+      assert(updatedExisting);
+    });
+
+    it('should success with sort', async () => {
+      const result = await app.mongo.findOneAndUpdate(NAME, {
+        filter: { _id },
+        update: { title: 'update doc' },
+        options: { sort: { _id: 1 } },
+      });
+      const { value, ok, lastErrorObject: { n, updatedExisting } } = result;
+      assert.deepEqual(value._id, _id);
+      assert.equal(ok, 1);
+      assert.equal(n, 1);
+      assert(updatedExisting);
+    });
+
+    it('should upsert', async () => {
+      const result = await app.mongo.findOneAndUpdate(NAME, {
+        filter: { title: 'upsert' },
+        update: {},
+        options: { upsert: true, returnOriginal: false },
+      });
+
+      const {
+        value,
+        ok,
+        lastErrorObject: { n, updatedExisting, upserted },
+      } = result;
+      assert(value);
+      assert.equal(ok, 1);
+      assert.equal(n, 1);
+      assert(!updatedExisting);
+      assert.deepEqual(upserted, value._id);
+    });
+
+    it('should error with empty filter', async () => {
+      try {
+        await app.mongo.findOneAndUpdate(NAME);
+      } catch (error) {
+        assert.equal(error.name, 'MongoError');
+        assert.equal(error.message, 'filter parameter must be an object');
+      }
+    });
+
+    it('should error with empty update', async () => {
+      try {
+        await app.mongo.findOneAndUpdate(NAME, { filter: {} });
+      } catch (error) {
+        assert.equal(error.name, 'MongoError');
+        assert.equal(error.message, 'update parameter must be an object');
+      }
+    });
+  });
+
+  describe('findOneAndReplace()', () => {
+    let _id;
+    beforeEach(
+      async () =>
+        ({ insertedId: _id } = await app.mongo.insertOne(NAME, {
+          doc: { title: 'new doc' },
+        }))
+    );
+
+    it('should success', async () => {
+      const result = await app.mongo.findOneAndReplace(NAME, {
+        filter: { _id },
+        replacement: { doc: 'replace' },
+      });
+
+      const { value, ok, lastErrorObject: { n, updatedExisting } } = result;
+      assert.deepEqual(value._id, _id);
+      assert.equal(value.title, 'new doc');
+      assert.equal(ok, 1);
+      assert.equal(n, 1);
+      assert(updatedExisting);
+    });
+
+    it('should success and return replaced', async () => {
+      const result = await app.mongo.findOneAndReplace(NAME, {
+        filter: { _id: new ObjectID(_id) },
+        replacement: { doc: 'replace' },
+        options: { returnOriginal: false },
+      });
+      const { value, ok, lastErrorObject: { n, updatedExisting } } = result;
+      assert.deepEqual(value._id, _id);
+      assert(!result.value.hasOwnProperty('title'));
+      assert.equal(value.doc, 'replace');
+      assert.equal(ok, 1);
+      assert.equal(n, 1);
+      assert(updatedExisting);
+    });
+
+    it('should upsert', async () => {
+      const result = await app.mongo.findOneAndReplace(NAME, {
+        filter: { title: 'upsert' },
+        replacement: { doc: 'replace' },
+        options: { upsert: true, returnOriginal: false },
+      });
+
+      const {
+        value,
+        ok,
+        lastErrorObject: { n, updatedExisting, upserted },
+      } = result;
+      assert.equal(ok, 1);
+      assert.equal(n, 1);
+      assert.equal(updatedExisting, false);
+      assert.deepEqual(upserted, value._id);
+    });
+
+    it('should error with empty filter', async () => {
+      try {
+        await app.mongo.findOneAndReplace(NAME);
+      } catch (error) {
+        assert.equal(error.name, 'MongoError');
+        assert.equal(error.message, 'filter parameter must be an object');
+      }
+    });
+
+    it('should error with empty update', async () => {
+      try {
+        await app.mongo.findOneAndReplace(NAME, { filter: {} });
+      } catch (error) {
+        assert.equal(error.name, 'MongoError');
+        assert.equal(error.message, 'replacement parameter must be an object');
+      }
+    });
+  });
+
+  describe('findOneAndDelete()', () => {
+    let _id;
+    beforeEach(async () => {
+      const result = await app.mongo.insertMany(NAME, {
+        docs: [{ title: 'new doc' }, { title: 'new doc' }],
+      });
+      _id = result.insertedIds[0];
+    });
+
+    it('should success', async () => {
+      const result = await app.mongo.findOneAndDelete(NAME, {
+        filter: { _id },
+      });
+
+      const { value, ok, lastErrorObject: { n } } = result;
+      assert.deepEqual(value._id, _id);
+      assert.equal(value.title, 'new doc');
+      assert.equal(ok, 1);
+      assert.equal(n, 1);
+    });
+
+    it('should success with sort', async () => {
+      const result = await app.mongo.findOneAndDelete(NAME, {
+        filter: {},
+        options: { sort: { id: 1 } },
+      });
+
+      const { value, ok, lastErrorObject: { n } } = result;
+      assert.deepEqual(value._id, _id);
+      assert.equal(value.title, 'new doc');
+      assert.equal(ok, 1);
+      assert.equal(n, 1);
+    });
+
+    it('should error', async () => {
+      try {
+        await app.mongo.findOneAndDelete(NAME);
+      } catch (error) {
+        assert.equal(error.name, 'MongoError');
+        assert.equal(error.message, 'filter parameter must be an object');
       }
     });
   });
@@ -252,56 +322,103 @@ describe('test/mongo.test.js', () => {
         })
     );
 
-    afterEach(async () => await app.mongo.deleteMany(NAME, {}));
+    afterEach(async () => await app.mongo.deleteMany(NAME, { filter: {} }));
 
-    it('should update success', async () => {
+    it('should success', async () => {
       const result = await app.mongo.updateMany(NAME, {
         filter: { type: 'doc' },
         update: { $set: { type: 'update' } },
       });
-      assert(result.matchedCount === 2);
-      assert(result.modifiedCount === 2);
-      assert(result.upsertedCount === 0);
-      assert(result.upsertedId === null);
+
+      const {
+        connection,
+        matchedCount,
+        modifiedCount,
+        upsertedCount,
+        upsertedId,
+        result: { n, nModified, ok },
+      } = result;
+      assert(connection);
+      assert.equal(matchedCount, 2);
+      assert.equal(modifiedCount, 2);
+      assert.equal(upsertedCount, 0);
+      assert.equal(upsertedId, null);
+      assert.equal(n, 2);
+      assert.equal(nModified, 2);
+      assert.equal(ok, 1);
     });
 
-    it('should update success all doc', async () => {
+    it('should success all doc', async () => {
       const result = await app.mongo.updateMany(NAME, {
+        filter: {},
         update: { $set: { type: 'update' } },
       });
-      assert(result.matchedCount === 4);
-      assert(result.modifiedCount === 4);
-      assert(result.upsertedCount === 0);
-      assert(result.upsertedId === null);
+
+      const {
+        connection,
+        matchedCount,
+        modifiedCount,
+        upsertedCount,
+        upsertedId,
+        result: { n, nModified, ok },
+      } = result;
+      assert(connection);
+      assert.equal(matchedCount, 4);
+      assert.equal(modifiedCount, 4);
+      assert.equal(upsertedCount, 0);
+      assert.equal(upsertedId, null);
+      assert.equal(n, 4);
+      assert.equal(nModified, 4);
+      assert.equal(ok, 1);
     });
 
-    it('should update fail with no update', async () => {
-      try {
-        await app.mongo.updateMany(NAME, { filter: { type: 'doc' } });
-      } catch (error) {
-        assert(error instanceof Error);
-      }
-    });
-
-    it('should update fail with empty args', async () => {
-      try {
-        await app.mongo.updateMany(NAME);
-      } catch (error) {
-        assert(error instanceof Error);
-      }
-    });
-
-    it('should upsert success', async () => {
+    it('should upsert', async () => {
       const result = await app.mongo.updateMany(NAME, {
         filter: { doc: 'doc5' },
         update: { $set: { type: 'update' } },
         options: { upsert: true },
       });
-      assert(result.matchedCount === 0);
-      assert(result.modifiedCount === 0);
-      assert(result.upsertedCount === 1);
-      assert(result.upsertedId.index === 0);
-      assert(result.upsertedId._id instanceof ObjectID);
+
+      const {
+        connection,
+        matchedCount,
+        modifiedCount,
+        upsertedCount,
+        upsertedId: { _id },
+        result: { n, nModified, ok },
+      } = result;
+      assert(connection);
+      assert.equal(matchedCount, 0);
+      assert.equal(modifiedCount, 0);
+      assert.equal(upsertedCount, 1);
+      assert(_id);
+      assert.equal(n, 1);
+      assert.equal(nModified, 0);
+      assert.equal(ok, 1);
+    });
+
+    it('should error with no filter', async () => {
+      try {
+        await app.mongo.updateMany(NAME, {
+          update: { $set: { type: 'update' } },
+        });
+      } catch (error) {
+        assert.equal(
+          error.message,
+          'selector must be a valid JavaScript object'
+        );
+      }
+    });
+
+    it('should error with empty update', async () => {
+      try {
+        await app.mongo.updateMany(NAME, { filter: {}, update: {} });
+      } catch (error) {
+        assert.equal(
+          error.message,
+          'The update operation document must contain at least one atomic operator.'
+        );
+      }
     });
   });
 
@@ -318,18 +435,34 @@ describe('test/mongo.test.js', () => {
         })
     );
 
-    afterEach(async () => await app.mongo.deleteMany(NAME, {}));
+    afterEach(async () => await app.mongo.deleteMany(NAME, { filter: {} }));
 
-    it('should delete success', async () => {
+    it('should success', async () => {
       const result = await app.mongo.deleteMany(NAME, {
         filter: { type: 'doc' },
       });
-      assert(result === 2);
+
+      const { deletedCount, result: { n, ok } } = result;
+      assert.equal(deletedCount, 2);
+      assert.equal(n, 2);
+      assert.equal(ok, 1);
     });
 
-    it('should delete all success', async () => {
-      const result = await app.mongo.deleteMany(NAME);
-      assert(result === 4);
+    it('should delete all', async () => {
+      const result = await app.mongo.deleteMany(NAME, { filter: {} });
+
+      const { deletedCount, result: { n, ok } } = result;
+      assert.equal(deletedCount, 4);
+      assert.equal(n, 4);
+      assert.equal(ok, 1);
+    });
+
+    it('should error', async () => {
+      try {
+        await app.mongo.deleteMany(NAME);
+      } catch (error) {
+        assert.equal(error.message, 'filter parameter must be an object');
+      }
     });
   });
 
@@ -345,42 +478,53 @@ describe('test/mongo.test.js', () => {
         })
     );
 
-    it('should find success', async () => {
+    it('should success', async () => {
       const result = await app.mongo.find(NAME, {
         query: { type: 'doc' },
       });
       assert(Array.isArray(result));
-      assert(result.length === 3);
+      assert.equal(result.length, 3);
     });
 
-    it('should find success with limit', async () => {
+    it('should success with limit', async () => {
       const result = await app.mongo.find(NAME, { limit: 1 });
       assert(Array.isArray(result));
-      assert(result.length === 1);
+      assert.equal(result.length, 1);
     });
 
-    it('should find success with skip', async () => {
+    it('should success with skip', async () => {
       const result = await app.mongo.find(NAME, { skip: 1 });
       assert(Array.isArray(result));
-      assert(result.length === 2);
+      assert.equal(result.length, 2);
     });
 
-    it('should find success with project', async () => {
+    it('should success with projection', async () => {
+      const result = await app.mongo.find(NAME, { projection: { index: 1 } });
+      assert(result[0].hasOwnProperty('index'));
+      assert(!result[0].hasOwnProperty('type'));
+    });
+
+    it('#DEPRECATED# should success with project', async () => {
       const result = await app.mongo.find(NAME, { project: { index: 1 } });
       assert(result[0].hasOwnProperty('index'));
       assert(!result[0].hasOwnProperty('type'));
     });
 
-    it('should find success with sort', async () => {
+    it('should success with sort', async () => {
       const result = await app.mongo.find(NAME, { sort: { index: -1 } });
       assert(result[0].index > result[1].index);
       assert(result[1].index > result[2].index);
     });
 
-    it('should find success with empty args', async () => {
+    it('should success with empty args', async () => {
       const result = await app.mongo.find(NAME);
       assert(Array.isArray(result));
-      assert(result.length === 3);
+      assert.equal(result.length, 3);
+    });
+
+    it('should cursor', async () => {
+      const result = await app.mongo.find(NAME, {}, true);
+      assert.equal(typeof result, 'object');
     });
   });
 
@@ -397,16 +541,16 @@ describe('test/mongo.test.js', () => {
         })
     );
 
-    it('should count success', async () => {
+    it('should  success', async () => {
       const result = await app.mongo.count(NAME, {
         query: { type: 'doc' },
       });
-      assert(result === 2);
+      assert.equal(result, 2);
     });
 
-    it('should count all success', async () => {
+    it('should count all', async () => {
       const result = await app.mongo.count(NAME);
-      assert(result === 4);
+      assert.equal(result, 4);
     });
   });
 
@@ -423,49 +567,54 @@ describe('test/mongo.test.js', () => {
         })
     );
 
-    it('should distinct success', async () => {
+    it('should success', async () => {
       const result = await app.mongo.distinct(NAME, {
         key: 'type',
       });
-      assert(Array.isArray(result));
-      assert.deepEqual(result, [ 'doc', 'text' ]);
+      assert.deepEqual(result, ['doc', 'text']);
     });
 
-    it('should distince success with query', async () => {
+    it('should success with query', async () => {
       const result = await app.mongo.distinct(NAME, {
         key: 'type',
         query: { type: 'doc' },
       });
       assert(Array.isArray(result));
-      assert.deepEqual(result, [ 'doc' ]);
+      assert.deepEqual(result, ['doc']);
     });
 
-    it('should distince success with no key', async () => {
-      const result = await app.mongo.distinct(NAME);
-      assert.deepEqual(result, []);
+    it('should error', async () => {
+      try {
+        await app.mongo.distinct(NAME);
+      } catch (error) {
+        assert.equal(
+          error.message,
+          '"key" had the wrong type. Expected string, found null'
+        );
+      }
     });
   });
 
   describe('createIndex()', () => {
-    it('should create index success', async () => {
+    it('should success', async () => {
       const result = await app.mongo.createIndex(NAME, {
         fieldOrSpec: { title: -1 },
       });
-      assert(result === 'title_-1');
+      assert.equal(result, 'title_-1');
     });
 
-    it('should create index success', async () => {
+    it('should success', async () => {
       const result = await app.mongo.createIndex(NAME, {
         fieldOrSpec: 'title',
       });
       assert(result === 'title_1');
     });
 
-    it('should create index fail with empty keys', async () => {
+    it('should error', async () => {
       try {
         await app.mongo.createIndex(NAME, { fieldOrSpec: {} });
       } catch (error) {
-        assert(error instanceof Error);
+        assert.equal(error.message, 'Index keys cannot be empty.');
       }
     });
 
@@ -482,14 +631,14 @@ describe('test/mongo.test.js', () => {
     it('should create && list collection success', async () => {
       await app.mongo.createCollection({ name: 'create' });
       const result = await app.mongo.listCollections();
-      assert(result.indexOf('create') !== -1);
+      assert.notEqual(result.indexOf('create'), -1);
     });
 
-    it('should create fail with empty args', async () => {
+    it('should error', async () => {
       try {
         await app.mongo.createCollection();
       } catch (error) {
-        assert(error instanceof Error);
+        assert.equal(error.message, 'must pass name of collection to create');
       }
     });
   });
@@ -504,7 +653,7 @@ describe('test/mongo.test.js', () => {
     beforeEach(async () => await app.mongo.insertMany(NAME, { docs }));
 
     it('should success', async () => {
-      const [ result ] = await app.mongo.aggregate(NAME, [
+      const pipeline = [
         { $match: {} },
         {
           $group: {
@@ -512,8 +661,17 @@ describe('test/mongo.test.js', () => {
             count: { $sum: 1 },
           },
         },
-      ]);
+      ];
+      const [result] = await app.mongo.aggregate(NAME, { pipeline });
       assert.equal(result.count, docs.length);
+    });
+
+    it('should error', async () => {
+      try {
+        app.mongo.aggregate(NAME, { pipeline: {} });
+      } catch (error) {
+        assert.equal(error.name, 'MongoError');
+      }
     });
   });
 });

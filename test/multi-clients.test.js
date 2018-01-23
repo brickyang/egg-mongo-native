@@ -1,27 +1,28 @@
 'use strict';
-const mm = require('egg-mock');
+const mock = require('egg-mock');
 const assert = require('assert');
 
 describe('test/mongo-clients.test.js', () => {
   let app;
   let NAME;
   before(async () => {
+    mock.consoleLevel('NONE');
     NAME = 'test';
-    app = mm.app({
+    app = mock.app({
       baseDir: 'apps/mongo-clients-test',
     });
     await app.ready();
   });
 
   afterEach(async () => {
-    await app.mongo.get('foo').deleteMany(NAME, {});
-    await app.mongo.get('bar').deleteMany(NAME, {});
-    mm.restore();
+    await app.mongo.get('foo').deleteMany(NAME, { filter: {} });
+    await app.mongo.get('bar').deleteMany(NAME, { filter: {} });
+    mock.restore();
   });
 
   after(async () => {
-    await app.mongo.get('foo').deleteMany(NAME, {});
-    await app.mongo.get('bar').deleteMany(NAME, {});
+    await app.mongo.get('foo').deleteMany(NAME, { filter: {} });
+    await app.mongo.get('bar').deleteMany(NAME, { filter: {} });
     app.close();
   });
 

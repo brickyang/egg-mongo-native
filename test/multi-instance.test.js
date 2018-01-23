@@ -9,7 +9,7 @@ describe('test/multi-instance.test.js', () => {
       host: [ 'host1', 'host2' ],
       port: [ 'port1', 'port2' ],
       name: 'test',
-      option: {
+      options: {
         replicaSet: 'test',
       },
     };
@@ -23,7 +23,7 @@ describe('test/multi-instance.test.js', () => {
       host: 'host1,host2',
       port: 'port1,port2',
       name: 'test',
-      option: {
+      options: {
         replicaSet: 'test',
       },
     };
@@ -37,7 +37,7 @@ describe('test/multi-instance.test.js', () => {
       host: [ 'host' ],
       port: [ 'port1', 'port2' ],
       name: 'test',
-      option: {
+      options: {
         replicaSet: 'test',
       },
     };
@@ -51,7 +51,7 @@ describe('test/multi-instance.test.js', () => {
       host: [ 'host1', 'host2' ],
       port: [ 'port' ],
       name: 'test',
-      option: {
+      options: {
         replicaSet: 'test',
       },
     };

@@ -1,4 +1,6 @@
-[![NPM version][npm-image]][npm-url] [![build status][travis-image]][travis-url]
+[![NPM version][npm-image]][npm-url]
+[![NPM quality][quality-image]][quality-url]
+[![build status][travis-image]][travis-url]
 [![Test coverage][codecov-image]][codecov-url]
 [![David deps][david-image]][david-url]
 [![Known Vulnerabilities][snyk-image]][snyk-url]
@@ -6,6 +8,8 @@
 
 [npm-image]: https://img.shields.io/npm/v/egg-mongo-native.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/egg-mongo-native
+[quality-image]: http://npm.packagequality.com/shield/egg-mongo-native.svg?style=flat-square
+[quality-url]: http://packagequality.com/#?package=egg-mongo-native
 [travis-image]: https://img.shields.io/travis/brickyang/egg-mongo-native.svg?branch=master&style=flat-square
 [travis-url]: https://travis-ci.org/brickyang/egg-mongo-native
 [codecov-image]: https://img.shields.io/codecov/c/github/brickyang/egg-mongo-native.svg?style=flat-square
@@ -85,7 +89,7 @@ exports.mongo = {
     host: 'host1, host2',
     port: 'port1, port2',
     name: 'name',
-    option: {
+    options: {
       replicaSet: 'test',
     },
   },
@@ -97,7 +101,7 @@ exports.mongo = {
     host: 'host', // or ['host']
     port: 'port1, port2', // or ['port1', 'port2']
     name: 'name',
-    option: {
+    options: {
       replicaSet: 'test',
     },
   },
@@ -118,7 +122,7 @@ exports.mongo = {
       name: 'db1',
       user: 'user',
       password: 'password',
-      option: {},
+      options: {},
     },
     db2: {
       host: 'host',
@@ -126,7 +130,7 @@ exports.mongo = {
       name: 'db2',
       user: 'user',
       password: 'password',
-      option: {},
+      options: {},
     },
   },
 };

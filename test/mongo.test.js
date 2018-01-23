@@ -397,6 +397,14 @@ describe('test/mongo.test.js', () => {
       assert.equal(ok, 1);
     });
 
+    it('should error with no args', async () => {
+      try {
+        await app.mongo.updateMany(NAME);
+      } catch (error) {
+        assert(error);
+      }
+    });
+
     it('should error with no filter', async () => {
       try {
         await app.mongo.updateMany(NAME, {
@@ -571,7 +579,7 @@ describe('test/mongo.test.js', () => {
       const result = await app.mongo.distinct(NAME, {
         key: 'type',
       });
-      assert.deepEqual(result, ['doc', 'text']);
+      assert.deepEqual(result, [ 'doc', 'text' ]);
     });
 
     it('should success with query', async () => {
@@ -580,7 +588,7 @@ describe('test/mongo.test.js', () => {
         query: { type: 'doc' },
       });
       assert(Array.isArray(result));
-      assert.deepEqual(result, ['doc']);
+      assert.deepEqual(result, [ 'doc' ]);
     });
 
     it('should error', async () => {
@@ -662,7 +670,7 @@ describe('test/mongo.test.js', () => {
           },
         },
       ];
-      const [result] = await app.mongo.aggregate(NAME, { pipeline });
+      const [ result ] = await app.mongo.aggregate(NAME, { pipeline });
       assert.equal(result.count, docs.length);
     });
 
@@ -671,6 +679,14 @@ describe('test/mongo.test.js', () => {
         app.mongo.aggregate(NAME, { pipeline: {} });
       } catch (error) {
         assert.equal(error.name, 'MongoError');
+      }
+    });
+
+    it('should error', async () => {
+      try {
+        app.mongo.aggregate(NAME);
+      } catch (error) {
+        assert(error);
       }
     });
   });

@@ -1,6 +1,6 @@
 {
   "name": "egg-mongo-native",
-  "version": "3.0.0",
+  "version": "3.0.0-rc",
   "description": "MongoDB egg.js plugin using native driver.",
   "eggPlugin": {
     "name": "mongo"
@@ -23,29 +23,19 @@
     "egg-ci": "^1.8.0",
     "egg-mock": "^3.14.0",
     "eslint": "^4.16.0",
-    "eslint-config-egg": "^6.0.0",
-    "supertest": "^3.0.0"
+    "eslint-config-egg": "^6.0.0"
   },
   "engines": {
     "node": ">=8.9.0"
   },
   "scripts": {
-    "test": "npm run lint -- --fix && npm run pkgfiles && npm run test-local",
+    "test": "npm run lint -- --fix && npm run test-local",
     "test-local": "egg-bin test",
     "cov": "egg-bin cov",
     "lint": "eslint .",
-    "ci": "npm run pkgfiles --check && npm run lint && npm run cov",
-    "pkgfiles": "egg-bin pkgfiles"
+    "ci": "npm run lint && npm run cov"
   },
-  "files": [
-    "config",
-    "app.js",
-    "lib",
-    "index.d.ts"
-  ],
-  "ci": {
-    "version": "8, 9"
-  },
+  "files": ["config", "app.js", "lib", "index.d.ts"],
   "repository": {
     "type": "git",
     "url": "git@github.com:brickyang/egg-mongo.git"
@@ -53,7 +43,7 @@
   "bugs": {
     "url": "https://github.com/brickyang/egg-mongo/issues"
   },
-  "homepage": "https://github.com/brickyang/egg-mongo#readme",
+  "homepage": "https://github.com/brickyang/egg-mongo",
   "author": "Brick <brick.c.yang@gmail.com>",
   "license": "MIT"
 }

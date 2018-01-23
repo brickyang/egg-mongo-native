@@ -1,23 +1,38 @@
+import EventEmitter from 'events';
 import {
-  ObjectId,
-  CollectionInsertOneOptions,
-  UpdateWriteOpResult,
   Collection,
-  FindOneAndReplaceOption,
+  CollectionAggregationOptions,
+  CollectionCreateOptions,
+  CollectionInsertManyOptions,
+  CollectionInsertOneOptions,
+  CommonOptions,
+  Cursor,
   Db,
+  DeleteWriteOpResultObject,
+  FindAndModifyWriteOpResultObject,
+  FindOneAndReplaceOption,
+  FindOneOptions,
   IndexOptions,
   InsertOneWriteOpResult,
   InsertWriteOpResult,
-  CollectionInsertManyOptions,
-  FindAndModifyWriteOpResultObject,
+  MongoCallback,
+  MongoClientOptions,
   MongoCountPreferences,
   ReadPreference,
-  CollectionOptions,
-  CollectionCreateOptions,
+  UpdateWriteOpResult,
 } from 'mongodb';
 
+export { ObjectId } from 'mongodb';
+
+type Default = any;
+
 declare class MongoDB {
+  private url: string;
+  private clientOptions: MongoClientOptions;
   public db: Db;
+  public config: IMongoConfig;
+
+  constructor(config: IMongoConfig);
 
   public connect(url: string): Promise<Db>;
 
@@ -31,90 +46,126 @@ declare class MongoDB {
     args?: { docs: Object[]; options?: CollectionInsertManyOptions }
   ): Promise<InsertWriteOpResult>;
 
-  public findOneAndUpdate(
+  public findOneAndUpdate<T = Default>(
     name: string,
-    args?: {
+    args: {
       filter: Object;
       update: Object;
       options?: FindOneAndReplaceOption;
     }
-  ): Promise<FindAndModifyWriteOpResultObject>;
+  ): Promise<FindAndModifyWriteOpResultObject<T>>;
 
-  public findOneAndReplace(
+  public findOneAndReplace<T = Default>(
     name: string,
-    args?: {
+    args: {
       filter: Object;
       replacement: Object;
       options?: FindOneAndReplaceOption;
     }
-  ): Promise<FindAndModifyWriteOpResultObject>;
+  ): Promise<FindAndModifyWriteOpResultObject<T>>;
 
-  public findOneAndDelete(
+  public findOneAndDelete<T = Default>(
     name: string,
-    args?: {
+    args: {
       filter: Object;
-      options?: { projection?: Object; sort?: Object; maxTimeMS?: number };
+      options?: {
+        projection?: Object;
+        sort?: Object;
+        maxTimeMS?: number;
+        session?: ClientSession;
+      };
     }
-  ): Promise<FindAndModifyWriteOpResultObject>;
+  ): Promise<FindAndModifyWriteOpResultObject<T>>;
 
   public updateMany(
     name: string,
     args: {
       filter: Object;
       update: Object;
-      options?: { upsert?: boolean; w?: any; wtimeout?: number; j?: boolean };
+      options?: CommonOptions & { upsert?: boolean };
     }
   ): Promise<UpdateWriteOpResult>;
 
   public deleteMany(
     name: string,
-    args: { filter: any; options?: CollectionOptions }
-  ): Promise<number>;
+    args: { filter: Object; options?: CommonOptions }
+  ): Promise<DeleteWriteOpResultObject>;
 
-  public find<T = any>(
+  public find<T = Default>(
     name: string,
     args: {
-      query: any;
+      query?: any;
       skip?: number;
       limit?: number;
+      projection?: any;
       project?: any;
       sort?: { [key: string]: number };
-    }
-  ): Promise<T[]>;
+      options?: FindOneOptions;
+    },
+    returnCursor: boolean
+  ): Promise<T[] | Cursor<T>>;
 
   public count(
     name: string,
-    args: {
-      query: any;
+    args?: {
+      query?: any;
       options?: MongoCountPreferences;
     }
   ): Promise<number>;
 
   public distinct(
     name: string,
-    args?: {
-      key?: string;
-      query?: any;
-      options?: { readPreference?: ReadPreference | string };
+    args: {
+      key: string;
+      query?: Object;
+      options?: {
+        readPreference?: ReadPreference | string;
+        maxTimeMS?: number;
+        session?: ClientSession;
+      };
     }
-  ): Promise<string[]>;
+  ): Promise<any[]>;
 
   public createIndex(
     name: string,
     args: { fieldOrSpec: string | any; options?: IndexOptions }
   ): Promise<string>;
 
-  public listCollections(args?: {
-    filter?: any;
+  public listCollections(args: {
+    filter?: Object;
     options?: { batchSize?: number; readPreference?: ReadPreference | string };
   }): Promise<string[]>;
 
-  public createCollection(args: {
+  public createCollection<T = Default>(args: {
     name: string;
     options?: CollectionCreateOptions;
-  }): Promise<Collection>;
+  }): Promise<Collection<T>>;
 
-  public aggregate<T = any>(name: string, pipeline: Object[]): Promise<T[]>;
+  public aggregate<T = Default>(
+    name: string,
+    args: { pipeline: any[]; options?: CollectionAggregationOptions }
+  ): Promise<T[]>;
 }
 
 export default MongoDB;
+
+interface IMongoConfig {
+  host: string;
+  port: string | number;
+  name: string;
+  use: string;
+  password?: string;
+  options?: MongoClientOptions;
+}
+
+declare class ClientSession extends EventEmitter {
+  endSession(callback?: MongoCallback<void>): void;
+  endSession(options: any, callback?: MongoCallback<void>): void;
+  equals(session: ClientSession): boolean;
+}
+
+declare module 'egg' {
+  export interface Application {
+    mongo: MongoDB;
+  }
+}

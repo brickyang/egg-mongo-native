@@ -1,22 +1,3 @@
-[![NPM version][npm-image]][npm-url] [![build status][travis-image]][travis-url]
-[![Test coverage][codecov-image]][codecov-url]
-[![David deps][david-image]][david-url]
-[![Known Vulnerabilities][snyk-image]][snyk-url]
-[![npm download][download-image]][download-url]
-
-[npm-image]: https://img.shields.io/npm/v/egg-mongo-native.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/egg-mongo-native
-[travis-image]: https://img.shields.io/travis/brickyang/egg-mongo-native.svg?branch=master&style=flat-square
-[travis-url]: https://travis-ci.org/brickyang/egg-mongo-native
-[codecov-image]: https://img.shields.io/codecov/c/github/brickyang/egg-mongo-native.svg?style=flat-square
-[codecov-url]: https://codecov.io/github/brickyang/egg-mongo-native?branch=master
-[david-image]: https://img.shields.io/david/brickyang/egg-mongo-native.svg?branch=master&style=flat-square
-[david-url]: https://david-dm.org/brickyang/egg-mongo-native?branch=master
-[snyk-image]: https://snyk.io/test/npm/egg-mongo-native/badge.svg?style=flat-square
-[snyk-url]: https://snyk.io/test/npm/egg-mongo-native
-[download-image]: https://img.shields.io/npm/dm/egg-mongo-native.svg?style=flat-square
-[download-url]: https://npmjs.org/package/egg-mongo-native
-
 [**中文版**](https://github.com/brickyang/egg-mongo/blob/master/README.zh_CN.md)
 
 This plugin base on
@@ -46,7 +27,7 @@ app.mongo.find('name', { query, skip, limit, project, sort });
 ## Install
 
 ```bash
-$ npm i egg-mongo-native --save
+$ npm i egg-mongo-native@release-2 --save
 ```
 
 ## Enable Plugin

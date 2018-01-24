@@ -1,6 +1,6 @@
 {
   "name": "egg-mongo-native",
-  "version": "3.0.0-rc",
+  "version": "3.0.0",
   "description": "MongoDB egg.js plugin using native driver.",
   "eggPlugin": {
     "name": "mongo"
@@ -35,7 +35,12 @@
     "lint": "eslint .",
     "ci": "npm run lint && npm run cov"
   },
-  "files": ["config", "app.js", "lib", "index.d.ts"],
+  "files": [
+    "config",
+    "app.js",
+    "lib",
+    "index.d.ts"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:brickyang/egg-mongo.git"

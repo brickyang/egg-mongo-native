@@ -10,11 +10,11 @@
 [npm-url]: https://npmjs.org/package/egg-mongo-native
 [quality-image]: http://npm.packagequality.com/shield/egg-mongo-native.svg?style=flat-square
 [quality-url]: http://packagequality.com/#?package=egg-mongo-native
-[travis-image]: https://img.shields.io/travis/brickyang/egg-mongo-native.svg?branch=master&style=flat-square
+[travis-image]: https://img.shields.io/travis/brickyang/egg-mongo-native.svg?branch=master&amp;style=flat-square
 [travis-url]: https://travis-ci.org/brickyang/egg-mongo-native
 [codecov-image]: https://img.shields.io/codecov/c/github/brickyang/egg-mongo-native.svg?style=flat-square
 [codecov-url]: https://codecov.io/github/brickyang/egg-mongo-native?branch=master
-[david-image]: https://img.shields.io/david/brickyang/egg-mongo-native.svg?branch=master&style=flat-square
+[david-image]: https://img.shields.io/david/brickyang/egg-mongo-native.svg?branch=master&amp;style=flat-square
 [david-url]: https://david-dm.org/brickyang/egg-mongo-native?branch=master
 [snyk-image]: https://snyk.io/test/npm/egg-mongo-native/badge.svg?style=flat-square
 [snyk-url]: https://snyk.io/test/npm/egg-mongo-native
@@ -32,7 +32,7 @@ MongoDB 官方 driver 及 API。
 ```js
 db
   .collection('name')
-  .find(query)
+  .find(query, options)
   .skip(skip)
   .limit(limit)
   .project(project)
@@ -43,7 +43,7 @@ db
 封装后
 
 ```js
-app.mongo.find('name', { query, skip, limit, project, sort });
+app.mongo.find('name', { query, skip, limit, project, sort, options });
 ```
 
 此插件完全支持 Promise，并强烈推荐使用 async/await。
@@ -77,6 +77,7 @@ exports.mongo = {
     name: 'test',
     user: 'user',
     password: 'password',
+    options: {}
   },
 };
 ```
@@ -154,7 +155,7 @@ const args = { doc, options };
 app.mongo.insertOne('name', args);
 ```
 
-多个数据库实例
+**连接多个数据库时**
 
 ```js
 const args = { doc, options };
@@ -163,28 +164,35 @@ app.mongo.get('db1').insertOne('name', args);
 
 可以看到 `args` 就是包含原版 API 参数的一个对象。
 
+## 属性
+
+在 `app.mongo` 上提供下列属性：
+
+- **db**：已连接的数据库实例
+- **config**：数据库连接设置，即 `config.mongo.client`
+
+## API
+
 目前插件提供的 API 包括：
 
-```js
-connect(); // 不需要用户调用
-insertOne();
-findOneAndUpdate();
-findOneAndReplace();
-findOneAndDelete();
-insertMany();
-updateMany();
-deleteMany();
-find();
-count();
-distinct();
-createIndex();
-listCollection();
-createCollection();
-aggregate(); // v2.2.0 以上
-```
+- **connect**：应用启动时会自动连接，不需要手动操作
+- **insertOne**
+- **insertMany**
+- **findOneAndUpdate**
+- **findOneAndReplace**
+- **findOneAndDelete**
+- **updateMany**
+- **deleteMany**
+- **find**
+- **count**
+- **distinct**
+- **createIndex**
+- **listCollection**
+- **createCollection**
+- **aggregate**：2.2.0 及以上版本提供（建议使用 3.x 版本）
 
-当然，在任何时候你也都可以使用 `app.mongo.db` 调用所有 API。你可以在这里查看所有
-API：[Node.js MongoDB Driver API](http://mongodb.github.io/node-mongodb-native/2.2/api/)。
+当然，在任何时候你也都可以使用 `app.mongo.db` 调用所有 API。在这里查看所有
+API：[Node.js MongoDB Driver API](http://mongodb.github.io/node-mongodb-native/3.0/api/)。
 
 ## 同步与异步
 

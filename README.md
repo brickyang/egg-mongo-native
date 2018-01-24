@@ -10,11 +10,11 @@
 [npm-url]: https://npmjs.org/package/egg-mongo-native
 [quality-image]: http://npm.packagequality.com/shield/egg-mongo-native.svg?style=flat-square
 [quality-url]: http://packagequality.com/#?package=egg-mongo-native
-[travis-image]: https://img.shields.io/travis/brickyang/egg-mongo-native.svg?branch=master&style=flat-square
+[travis-image]: https://img.shields.io/travis/brickyang/egg-mongo-native.svg?branch=master&amp;style=flat-square
 [travis-url]: https://travis-ci.org/brickyang/egg-mongo-native
 [codecov-image]: https://img.shields.io/codecov/c/github/brickyang/egg-mongo-native.svg?style=flat-square
 [codecov-url]: https://codecov.io/github/brickyang/egg-mongo-native?branch=master
-[david-image]: https://img.shields.io/david/brickyang/egg-mongo-native.svg?branch=master&style=flat-square
+[david-image]: https://img.shields.io/david/brickyang/egg-mongo-native.svg?branch=master&amp;style=flat-square
 [david-url]: https://david-dm.org/brickyang/egg-mongo-native?branch=master
 [snyk-image]: https://snyk.io/test/npm/egg-mongo-native/badge.svg?style=flat-square
 [snyk-url]: https://snyk.io/test/npm/egg-mongo-native
@@ -33,7 +33,7 @@ as it is. For example, to find a document you need this with official API
 ```js
 db
   .collection('name')
-  .find(query)
+  .find(query, options)
   .skip(skip)
   .limit(limit)
   .project(project)
@@ -44,7 +44,7 @@ db
 and with this plugin
 
 ```js
-app.mongo.find('name', { query, skip, limit, project, sort });
+app.mongo.find('name', { query, skip, limit, project, sort, options });
 ```
 
 ## Install
@@ -76,6 +76,7 @@ exports.mongo = {
     name: 'test',
     user: 'user',
     password: 'password',
+    options: {},
   },
 };
 ```
@@ -142,51 +143,58 @@ see [config/config.default.js](config/config.default.js) for more detail.
 
 The APIs provided by plugin usually need two arguments. The first is commonly
 the collection name, and the second is an object keeps the arguments of official
-API. For example, to insert one document with official API
+API. For example, to insert one document using official API
 
 ```js
 db.collection('name').insertOne(doc, options);
 ```
 
-and with plugin API
+and using plugin API
 
 ```js
 const args = { doc, options };
 app.mongo.insertOne('name', args);
 ```
 
-Multiple Instances
+**For Multiple Instances**
 
 ```js
 const args = { doc, options };
 app.mongo.get('db1').insertOne('name', args);
 ```
 
-The `args` is the object provides the arguments to official API.
+The `args` is an object provides the arguments to official API.
 
-Until now, this plugin provides thes APIs
+## Properties
 
-```js
-connect(); // you don't need to call
-insertOne();
-findOneAndUpdate();
-findOneAndReplace();
-findOneAndDelete();
-insertMany();
-updateMany();
-deleteMany();
-find();
-count();
-distinct();
-createIndex();
-listCollection();
-createCollection();
-aggregate(); // v2.2.0 above
-```
+You can access these properties of  `app.mongo`。
 
-You can always use `app.mongo.db` to call all official APIs. You can check the
+- **db**: the db instance connected
+- **config**: the client config, typically is an object includes the host, port, name, user, password and options.
+
+## Methods
+
+Until now, this plugin provides these functions:
+
+- **connect**: automatically connected, no need to call
+- **insertOne**
+- **insertMany**
+- **findOneAndUpdate**
+- **findOneAndReplace**
+- **findOneAndDelete**
+- **updateMany**
+- **deleteMany**
+- **find**
+- **count**
+- **distinct**
+- **createIndex**
+- **listCollection**
+- **createCollection**
+- **aggregate**: need version 2.2.0 and above
+
+You can always use `app.mongo.db` to use all official APIs. Check the
 APIs here:
-[Node.js MongoDB Driver API](http://mongodb.github.io/node-mongodb-native/2.2/api/).
+[Node.js MongoDB Driver API](http://mongodb.github.io/node-mongodb-native/3.0/api/).
 
 ## Promise
 

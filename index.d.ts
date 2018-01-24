@@ -93,7 +93,7 @@ declare class MongoDB {
 
   public find<T = Default>(
     name: string,
-    args?: {
+    args: {
       query?: any;
       skip?: number;
       limit?: number;
@@ -102,7 +102,7 @@ declare class MongoDB {
       sort?: { [key: string]: number };
       options?: FindOneOptions;
     },
-    returnCursor?: boolean
+    returnCursor: boolean
   ): Promise<Cursor<T>>;
 
   public find<T = Default>(

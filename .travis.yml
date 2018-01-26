@@ -13,3 +13,5 @@ script:
 - npm run ci
 after_script:
 - npminstall codecov && codecov
+notifications:
+   webhooks: https://oapi.dingtalk.com/robot/send?access_token=7592ba3ae26a71344ac54b396ff1c1812f003f1519166a8dd9b696b98f257aa9

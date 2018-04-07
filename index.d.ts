@@ -183,8 +183,10 @@ declare module 'egg' {
   }
 
   interface EggAppConfig {
-    client?: IMongoConfig;
-    clients?: { [key: string]: IMongoConfig };
-    default?: IMongoConfig;
+    mongo: {
+      client?: IMongoConfig;
+      clients?: { [key: string]: IMongoConfig };
+      default?: IMongoConfig;
+    };
   }
 }

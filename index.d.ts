@@ -163,10 +163,10 @@ declare class MongoDB {
 export default MongoDB;
 
 interface IMongoConfig {
-  host: string;
-  port: string | number;
-  name: string;
-  use: string;
+  host?: string | string[];
+  port?: string | number;
+  name?: string;
+  user?: string;
   password?: string;
   options?: MongoClientOptions;
 }
@@ -178,7 +178,13 @@ declare class ClientSession extends EventEmitter {
 }
 
 declare module 'egg' {
-  export interface Application {
+  interface Application {
     mongo: MongoDB;
+  }
+
+  interface EggAppConfig {
+    client?: IMongoConfig;
+    clients?: { [key: string]: IMongoConfig };
+    default?: IMongoConfig;
   }
 }

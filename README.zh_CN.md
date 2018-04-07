@@ -10,11 +10,11 @@
 [npm-url]: https://npmjs.org/package/egg-mongo-native
 [quality-image]: http://npm.packagequality.com/shield/egg-mongo-native.svg?style=flat-square
 [quality-url]: http://packagequality.com/#?package=egg-mongo-native
-[travis-image]: https://img.shields.io/travis/brickyang/egg-mongo-native.svg?branch=master&amp;style=flat-square
+[travis-image]: https://img.shields.io/travis/brickyang/egg-mongo-native.svg?branch=master&style=flat-square
 [travis-url]: https://travis-ci.org/brickyang/egg-mongo-native
 [codecov-image]: https://img.shields.io/codecov/c/github/brickyang/egg-mongo-native.svg?style=flat-square
 [codecov-url]: https://codecov.io/github/brickyang/egg-mongo-native?branch=master
-[david-image]: https://img.shields.io/david/brickyang/egg-mongo-native.svg?branch=master&amp;style=flat-square
+[david-image]: https://img.shields.io/david/brickyang/egg-mongo-native.svg?branch=master&style=flat-square
 [david-url]: https://david-dm.org/brickyang/egg-mongo-native?branch=master
 [snyk-image]: https://snyk.io/test/npm/egg-mongo-native/badge.svg?style=flat-square
 [snyk-url]: https://snyk.io/test/npm/egg-mongo-native
@@ -77,7 +77,7 @@ exports.mongo = {
     name: 'test',
     user: 'user',
     password: 'password',
-    options: {}
+    options: {},
   },
 };
 ```
@@ -88,8 +88,8 @@ exports.mongo = {
 // mongodb://host1:port1,host2:port2/name?replicaSet=test
 exports.mongo = {
   client: {
-    host: 'host1, host2',
-    port: 'port1, port2',
+    host: 'host1,host2',
+    port: 'port1,port2',
     name: 'name',
     options: {
       replicaSet: 'test',
@@ -101,7 +101,7 @@ exports.mongo = {
 exports.mongo = {
   client: {
     host: 'host', // or ['host']
-    port: 'port1, port2', // or ['port1', 'port2']
+    port: 'port1,port2', // or ['port1', 'port2']
     name: 'name',
     options: {
       replicaSet: 'test',
@@ -168,28 +168,28 @@ app.mongo.get('db1').insertOne('name', args);
 
 在 `app.mongo` 上提供下列属性：
 
-- **db**：已连接的数据库实例
-- **config**：数据库连接设置，即 `config.mongo.client`
+* **db**：已连接的数据库实例
+* **config**：数据库连接设置，即 `config.mongo.client`
 
 ## API
 
 目前插件提供的 API 包括：
 
-- **connect**：应用启动时会自动连接，不需要手动操作
-- **insertOne**
-- **insertMany**
-- **findOneAndUpdate**
-- **findOneAndReplace**
-- **findOneAndDelete**
-- **updateMany**
-- **deleteMany**
-- **find**
-- **count**
-- **distinct**
-- **createIndex**
-- **listCollection**
-- **createCollection**
-- **aggregate**：2.2.0 及以上版本提供（建议使用 3.x 版本）
+* **connect**：应用启动时会自动连接，不需要手动操作
+* **insertOne**
+* **insertMany**
+* **findOneAndUpdate**
+* **findOneAndReplace**
+* **findOneAndDelete**
+* **updateMany**
+* **deleteMany**
+* **find**
+* **count**
+* **distinct**
+* **createIndex**
+* **listCollection**
+* **createCollection**
+* **aggregate**：2.2.0 及以上版本提供（建议使用 3.x 版本）
 
 当然，在任何时候你也都可以使用 `app.mongo.db` 调用所有 API。在这里查看所有
 API：[Node.js MongoDB Driver API](http://mongodb.github.io/node-mongodb-native/3.0/api/)。

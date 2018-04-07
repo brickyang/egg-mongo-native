@@ -14,15 +14,15 @@
     "mongo-driver"
   ],
   "dependencies": {
-    "@types/mongodb": "^3.0.3",
-    "mongodb": "^3.0.1"
+    "@types/mongodb": "^3.0.10",
+    "mongodb": "^3.0.5"
   },
   "devDependencies": {
-    "egg": "^2.2.1",
-    "egg-bin": "^4.3.7",
-    "egg-mock": "^3.14.0",
-    "eslint": "^4.16.0",
-    "eslint-config-egg": "^6.0.0"
+    "egg": "^2.6.0",
+    "egg-bin": "^4.6.3",
+    "egg-mock": "^3.17.0",
+    "eslint": "^4.19.1",
+    "eslint-config-egg": "^7.0.0"
   },
   "engines": {
     "node": ">=8.9.0"

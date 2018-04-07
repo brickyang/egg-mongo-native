@@ -10,11 +10,11 @@
 [npm-url]: https://npmjs.org/package/egg-mongo-native
 [quality-image]: http://npm.packagequality.com/shield/egg-mongo-native.svg?style=flat-square
 [quality-url]: http://packagequality.com/#?package=egg-mongo-native
-[travis-image]: https://img.shields.io/travis/brickyang/egg-mongo-native.svg?branch=master&amp;style=flat-square
+[travis-image]: https://img.shields.io/travis/brickyang/egg-mongo-native.svg?branch=master&style=flat-square
 [travis-url]: https://travis-ci.org/brickyang/egg-mongo-native
 [codecov-image]: https://img.shields.io/codecov/c/github/brickyang/egg-mongo-native.svg?style=flat-square
 [codecov-url]: https://codecov.io/github/brickyang/egg-mongo-native?branch=master
-[david-image]: https://img.shields.io/david/brickyang/egg-mongo-native.svg?branch=master&amp;style=flat-square
+[david-image]: https://img.shields.io/david/brickyang/egg-mongo-native.svg?branch=master&style=flat-square
 [david-url]: https://david-dm.org/brickyang/egg-mongo-native?branch=master
 [snyk-image]: https://snyk.io/test/npm/egg-mongo-native/badge.svg?style=flat-square
 [snyk-url]: https://snyk.io/test/npm/egg-mongo-native
@@ -87,8 +87,8 @@ exports.mongo = {
 // mongodb://host1:port1,host2:port2/name?replicaSet=test
 exports.mongo = {
   client: {
-    host: 'host1, host2',
-    port: 'port1, port2',
+    host: 'host1,host2',
+    port: 'port1,port2',
     name: 'name',
     options: {
       replicaSet: 'test',
@@ -100,7 +100,7 @@ exports.mongo = {
 exports.mongo = {
   client: {
     host: 'host', // or ['host']
-    port: 'port1, port2', // or ['port1', 'port2']
+    port: 'port1,port2', // or ['port1', 'port2']
     name: 'name',
     options: {
       replicaSet: 'test',
@@ -167,30 +167,30 @@ The `args` is an object provides the arguments to official API.
 
 ## Properties
 
-You can access these properties of  `app.mongo`。
+You can access these properties of `app.mongo`。
 
-- **db**: the db instance connected
-- **config**: the client config, typically is an object includes the host, port, name, user, password and options.
+* **db**: the db instance connected
+* **config**: the client config, typically is an object includes the host, port, name, user, password and options.
 
 ## Methods
 
 Until now, this plugin provides these functions:
 
-- **connect**: automatically connected, no need to call
-- **insertOne**
-- **insertMany**
-- **findOneAndUpdate**
-- **findOneAndReplace**
-- **findOneAndDelete**
-- **updateMany**
-- **deleteMany**
-- **find**
-- **count**
-- **distinct**
-- **createIndex**
-- **listCollection**
-- **createCollection**
-- **aggregate**: need version 2.2.0 and above
+* **connect**: automatically connected, no need to call
+* **insertOne**
+* **insertMany**
+* **findOneAndUpdate**
+* **findOneAndReplace**
+* **findOneAndDelete**
+* **updateMany**
+* **deleteMany**
+* **find**
+* **count**
+* **distinct**
+* **createIndex**
+* **listCollection**
+* **createCollection**
+* **aggregate**: need version 2.2.0 and above
 
 You can always use `app.mongo.db` to use all official APIs. Check the
 APIs here:

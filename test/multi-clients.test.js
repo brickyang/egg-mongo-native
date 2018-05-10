@@ -14,29 +14,31 @@ describe('test/mongo-clients.test.js', () => {
     await app.ready();
   });
 
-  afterEach(async () => {
+  beforeEach(async () => {
     await app.mongo.get('foo').deleteMany(NAME, { filter: {} });
     await app.mongo.get('bar').deleteMany(NAME, { filter: {} });
-    mock.restore();
   });
 
-  after(async () => {
-    await app.mongo.get('foo').deleteMany(NAME, { filter: {} });
-    await app.mongo.get('bar').deleteMany(NAME, { filter: {} });
-    app.close();
-  });
+  afterEach(mock.restore);
+  after(() => app.close());
 
   describe('app.mongo.get()', () => {
     it('should get mongo configs foo info', async () => {
       const client = await app.mongo.get('foo');
-      assert(client.url === 'mongodb://localhost:27017/foo');
-      assert(client.db.databaseName === 'foo');
+      assert.equal(
+        client.url,
+        'mongodb://localhost:27017/foo?ssl=false&connectTimeoutMS=30000'
+      );
+      assert.equal(client.db.databaseName, 'foo');
     });
 
     it('should get mongo configs bar info', async () => {
       const client = await app.mongo.get('bar');
-      assert(client.url === 'mongodb://localhost:27017/bar');
-      assert(client.db.databaseName === 'bar');
+      assert.equal(
+        client.url,
+        'mongodb://localhost:27017/bar?ssl=false&connectTimeoutMS=30000'
+      );
+      assert.equal(client.db.databaseName, 'bar');
     });
   });
 });

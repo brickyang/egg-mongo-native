@@ -69,7 +69,12 @@ describe('test/mongo.test.js', () => {
       const docs = [{ title: 'doc1' }, { title: 'doc2' }, { title: 'doc3' }];
       const result = await app.mongo.insertMany(NAME, { docs });
 
-      const { insertedCount, insertedIds, ops, result: { ok, n } } = result;
+      const {
+        insertedCount,
+        insertedIds,
+        ops,
+        result: { ok, n },
+      } = result;
       assert.equal(insertedCount, 3);
       assert.equal(typeof insertedIds, 'object');
       assert.equal(Object.keys(result.insertedIds).length, 3);
@@ -113,10 +118,14 @@ describe('test/mongo.test.js', () => {
 
     it('should success', async () => {
       const filter = { _id };
-      const update = { title: 'update doc' };
+      const update = { $set: { title: 'update doc' } };
       const result = await app.mongo.findOneAndUpdate(NAME, { filter, update });
 
-      const { value, ok, lastErrorObject: { n, updatedExisting } } = result;
+      const {
+        value,
+        ok,
+        lastErrorObject: { n, updatedExisting },
+      } = result;
       assert.deepEqual(value._id, _id);
       assert.equal(value.title, 'new doc');
       assert.equal(ok, 1);
@@ -127,11 +136,15 @@ describe('test/mongo.test.js', () => {
     it('should success and return updated', async () => {
       const result = await app.mongo.findOneAndUpdate(NAME, {
         filter: { _id },
-        update: { title: 'update doc' },
+        update: { $set: { title: 'update doc' } },
         options: { returnOriginal: false },
       });
 
-      const { value, ok, lastErrorObject: { n, updatedExisting } } = result;
+      const {
+        value,
+        ok,
+        lastErrorObject: { n, updatedExisting },
+      } = result;
       assert.deepEqual(value._id, _id);
       assert.equal(value.title, 'update doc');
       assert.equal(ok, 1);
@@ -142,10 +155,14 @@ describe('test/mongo.test.js', () => {
     it('should success with sort', async () => {
       const result = await app.mongo.findOneAndUpdate(NAME, {
         filter: { _id },
-        update: { title: 'update doc' },
+        update: { $set: { title: 'update doc' } },
         options: { sort: { _id: 1 } },
       });
-      const { value, ok, lastErrorObject: { n, updatedExisting } } = result;
+      const {
+        value,
+        ok,
+        lastErrorObject: { n, updatedExisting },
+      } = result;
       assert.deepEqual(value._id, _id);
       assert.equal(ok, 1);
       assert.equal(n, 1);
@@ -155,7 +172,7 @@ describe('test/mongo.test.js', () => {
     it('should upsert', async () => {
       const result = await app.mongo.findOneAndUpdate(NAME, {
         filter: { title: 'upsert' },
-        update: {},
+        update: { $setOnInsert: { title: 'upsert' } },
         options: { upsert: true, returnOriginal: false },
       });
 
@@ -165,6 +182,7 @@ describe('test/mongo.test.js', () => {
         lastErrorObject: { n, updatedExisting, upserted },
       } = result;
       assert(value);
+      assert.equal(value.title, 'upsert');
       assert.equal(ok, 1);
       assert.equal(n, 1);
       assert(!updatedExisting);
@@ -192,12 +210,10 @@ describe('test/mongo.test.js', () => {
 
   describe('findOneAndReplace()', () => {
     let _id;
-    beforeEach(
-      async () =>
-        ({ insertedId: _id } = await app.mongo.insertOne(NAME, {
-          doc: { title: 'new doc' },
-        }))
-    );
+    beforeEach(async () =>
+      ({ insertedId: _id } = await app.mongo.insertOne(NAME, {
+        doc: { title: 'new doc' },
+      })));
 
     it('should success', async () => {
       const result = await app.mongo.findOneAndReplace(NAME, {
@@ -205,7 +221,11 @@ describe('test/mongo.test.js', () => {
         replacement: { doc: 'replace' },
       });
 
-      const { value, ok, lastErrorObject: { n, updatedExisting } } = result;
+      const {
+        value,
+        ok,
+        lastErrorObject: { n, updatedExisting },
+      } = result;
       assert.deepEqual(value._id, _id);
       assert.equal(value.title, 'new doc');
       assert.equal(ok, 1);
@@ -219,7 +239,11 @@ describe('test/mongo.test.js', () => {
         replacement: { doc: 'replace' },
         options: { returnOriginal: false },
       });
-      const { value, ok, lastErrorObject: { n, updatedExisting } } = result;
+      const {
+        value,
+        ok,
+        lastErrorObject: { n, updatedExisting },
+      } = result;
       assert.deepEqual(value._id, _id);
       assert(!result.value.hasOwnProperty('title'));
       assert.equal(value.doc, 'replace');
@@ -279,7 +303,11 @@ describe('test/mongo.test.js', () => {
         filter: { _id },
       });
 
-      const { value, ok, lastErrorObject: { n } } = result;
+      const {
+        value,
+        ok,
+        lastErrorObject: { n },
+      } = result;
       assert.deepEqual(value._id, _id);
       assert.equal(value.title, 'new doc');
       assert.equal(ok, 1);
@@ -292,7 +320,11 @@ describe('test/mongo.test.js', () => {
         options: { sort: { id: 1 } },
       });
 
-      const { value, ok, lastErrorObject: { n } } = result;
+      const {
+        value,
+        ok,
+        lastErrorObject: { n },
+      } = result;
       assert.deepEqual(value._id, _id);
       assert.equal(value.title, 'new doc');
       assert.equal(ok, 1);
@@ -310,17 +342,15 @@ describe('test/mongo.test.js', () => {
   });
 
   describe('updateMany()', async () => {
-    beforeEach(
-      async () =>
-        await app.mongo.insertMany(NAME, {
-          docs: [
-            { title: 'doc1', type: 'doc' },
-            { title: 'doc2', type: 'doc' },
-            { title: 'doc3', type: 'text' },
-            { title: 'doc4', type: 'text' },
-          ],
-        })
-    );
+    beforeEach(async () =>
+      await app.mongo.insertMany(NAME, {
+        docs: [
+          { title: 'doc1', type: 'doc' },
+          { title: 'doc2', type: 'doc' },
+          { title: 'doc3', type: 'text' },
+          { title: 'doc4', type: 'text' },
+        ],
+      }));
 
     afterEach(async () => await app.mongo.deleteMany(NAME, { filter: {} }));
 
@@ -431,17 +461,15 @@ describe('test/mongo.test.js', () => {
   });
 
   describe('deleteMany()', () => {
-    beforeEach(
-      async () =>
-        await app.mongo.insertMany(NAME, {
-          docs: [
-            { title: 'doc1', type: 'doc' },
-            { title: 'doc2', type: 'doc' },
-            { title: 'doc3', type: 'text' },
-            { title: 'doc4', type: 'text' },
-          ],
-        })
-    );
+    beforeEach(async () =>
+      await app.mongo.insertMany(NAME, {
+        docs: [
+          { title: 'doc1', type: 'doc' },
+          { title: 'doc2', type: 'doc' },
+          { title: 'doc3', type: 'text' },
+          { title: 'doc4', type: 'text' },
+        ],
+      }));
 
     afterEach(async () => await app.mongo.deleteMany(NAME, { filter: {} }));
 
@@ -450,7 +478,10 @@ describe('test/mongo.test.js', () => {
         filter: { type: 'doc' },
       });
 
-      const { deletedCount, result: { n, ok } } = result;
+      const {
+        deletedCount,
+        result: { n, ok },
+      } = result;
       assert.equal(deletedCount, 2);
       assert.equal(n, 2);
       assert.equal(ok, 1);
@@ -459,7 +490,10 @@ describe('test/mongo.test.js', () => {
     it('should delete all', async () => {
       const result = await app.mongo.deleteMany(NAME, { filter: {} });
 
-      const { deletedCount, result: { n, ok } } = result;
+      const {
+        deletedCount,
+        result: { n, ok },
+      } = result;
       assert.equal(deletedCount, 4);
       assert.equal(n, 4);
       assert.equal(ok, 1);
@@ -475,16 +509,14 @@ describe('test/mongo.test.js', () => {
   });
 
   describe('find()', () => {
-    beforeEach(
-      async () =>
-        await app.mongo.insertMany(NAME, {
-          docs: [
-            { index: 1, type: 'doc' },
-            { index: 2, type: 'doc' },
-            { index: 3, type: 'doc' },
-          ],
-        })
-    );
+    beforeEach(async () =>
+      await app.mongo.insertMany(NAME, {
+        docs: [
+          { index: 1, type: 'doc' },
+          { index: 2, type: 'doc' },
+          { index: 3, type: 'doc' },
+        ],
+      }));
 
     it('should success', async () => {
       const result = await app.mongo.find(NAME, {
@@ -537,17 +569,15 @@ describe('test/mongo.test.js', () => {
   });
 
   describe('count()', () => {
-    beforeEach(
-      async () =>
-        await app.mongo.insertMany(NAME, {
-          docs: [
-            { type: 'doc' },
-            { type: 'doc' },
-            { type: 'text' },
-            { type: 'text' },
-          ],
-        })
-    );
+    beforeEach(async () =>
+      await app.mongo.insertMany(NAME, {
+        docs: [
+          { type: 'doc' },
+          { type: 'doc' },
+          { type: 'text' },
+          { type: 'text' },
+        ],
+      }));
 
     it('should  success', async () => {
       const result = await app.mongo.count(NAME, {
@@ -563,17 +593,15 @@ describe('test/mongo.test.js', () => {
   });
 
   describe('distinct()', () => {
-    beforeEach(
-      async () =>
-        await app.mongo.insertMany(NAME, {
-          docs: [
-            { type: 'doc' },
-            { type: 'doc' },
-            { type: 'text' },
-            { type: 'text' },
-          ],
-        })
-    );
+    beforeEach(async () =>
+      await app.mongo.insertMany(NAME, {
+        docs: [
+          { type: 'doc' },
+          { type: 'doc' },
+          { type: 'text' },
+          { type: 'text' },
+        ],
+      }));
 
     it('should success', async () => {
       const result = await app.mongo.distinct(NAME, {

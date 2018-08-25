@@ -7,13 +7,17 @@ module.exports = app => {
 
 function createMongo(config, app) {
   const client = new MongoDB(config);
+  const connectUrl = client.url.replace(
+    /:\S*@/,
+    `://${client.config.name}:******@`
+  );
 
   client.on('connect', () => {
-    app.coreLogger.info(`[egg-mongo] Connect success on ${client.url}.`);
+    app.coreLogger.info(`[egg-mongo] Connect success on ${connectUrl}.`);
   });
   /* istanbul ignore next */
   client.on('error', error => {
-    app.coreLogger.warn(`[egg-mongo] Connect fail on ${client.url}.`);
+    app.coreLogger.warn(`[egg-mongo] Connect fail on ${connectUrl}.`);
     app.coreLogger.error(error);
   });
 

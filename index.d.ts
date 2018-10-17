@@ -177,9 +177,15 @@ declare class ClientSession extends EventEmitter {
   equals(session: ClientSession): boolean;
 }
 
+interface MongoDBSingleton {
+  clients: Map<string, MongoDB>;
+  get (id: string) : MongoDB;
+}
+
+
 declare module 'egg' {
   interface Application {
-    mongo: MongoDB;
+    mongo: MongoDB | MongoDBSingleton;
   }
 
   interface EggAppConfig {

@@ -22,10 +22,6 @@ import {
   UpdateWriteOpResult,
 } from 'mongodb';
 
-export { ObjectId } from 'mongodb';
-
-type Default = any;
-
 declare class MongoDB {
   private url: string;
   private clientOptions: MongoClientOptions;
@@ -160,7 +156,8 @@ declare class MongoDB {
   ): Promise<T[]>;
 }
 
-export default MongoDB;
+type Default = any;
+type MongoDBSingleton = MongoDB & { get(name: string): MongoDB };
 
 interface IMongoConfig {
   host?: string | string[];
@@ -179,7 +176,7 @@ declare class ClientSession extends EventEmitter {
 
 declare module 'egg' {
   interface Application {
-    mongo: MongoDB;
+    mongo: MongoDBSingleton;
   }
 
   interface EggAppConfig {
@@ -190,3 +187,6 @@ declare module 'egg' {
     };
   }
 }
+
+export default MongoDB;
+export { ObjectId } from 'mongodb';

@@ -210,10 +210,12 @@ describe('test/mongo.test.js', () => {
 
   describe('findOneAndReplace()', () => {
     let _id;
-    beforeEach(async () =>
-      ({ insertedId: _id } = await app.mongo.insertOne(NAME, {
-        doc: { title: 'new doc' },
-      })));
+    beforeEach(
+      async () =>
+        ({ insertedId: _id } = await app.mongo.insertOne(NAME, {
+          doc: { title: 'new doc' },
+        }))
+    );
 
     it('should success', async () => {
       const result = await app.mongo.findOneAndReplace(NAME, {
@@ -342,15 +344,17 @@ describe('test/mongo.test.js', () => {
   });
 
   describe('updateMany()', async () => {
-    beforeEach(async () =>
-      await app.mongo.insertMany(NAME, {
-        docs: [
-          { title: 'doc1', type: 'doc' },
-          { title: 'doc2', type: 'doc' },
-          { title: 'doc3', type: 'text' },
-          { title: 'doc4', type: 'text' },
-        ],
-      }));
+    beforeEach(
+      async () =>
+        await app.mongo.insertMany(NAME, {
+          docs: [
+            { title: 'doc1', type: 'doc' },
+            { title: 'doc2', type: 'doc' },
+            { title: 'doc3', type: 'text' },
+            { title: 'doc4', type: 'text' },
+          ],
+        })
+    );
 
     afterEach(async () => await app.mongo.deleteMany(NAME, { filter: {} }));
 
@@ -461,15 +465,17 @@ describe('test/mongo.test.js', () => {
   });
 
   describe('deleteMany()', () => {
-    beforeEach(async () =>
-      await app.mongo.insertMany(NAME, {
-        docs: [
-          { title: 'doc1', type: 'doc' },
-          { title: 'doc2', type: 'doc' },
-          { title: 'doc3', type: 'text' },
-          { title: 'doc4', type: 'text' },
-        ],
-      }));
+    beforeEach(
+      async () =>
+        await app.mongo.insertMany(NAME, {
+          docs: [
+            { title: 'doc1', type: 'doc' },
+            { title: 'doc2', type: 'doc' },
+            { title: 'doc3', type: 'text' },
+            { title: 'doc4', type: 'text' },
+          ],
+        })
+    );
 
     afterEach(async () => await app.mongo.deleteMany(NAME, { filter: {} }));
 
@@ -509,14 +515,16 @@ describe('test/mongo.test.js', () => {
   });
 
   describe('find()', () => {
-    beforeEach(async () =>
-      await app.mongo.insertMany(NAME, {
-        docs: [
-          { index: 1, type: 'doc' },
-          { index: 2, type: 'doc' },
-          { index: 3, type: 'doc' },
-        ],
-      }));
+    beforeEach(
+      async () =>
+        await app.mongo.insertMany(NAME, {
+          docs: [
+            { index: 1, type: 'doc' },
+            { index: 2, type: 'doc' },
+            { index: 3, type: 'doc' },
+          ],
+        })
+    );
 
     it('should success', async () => {
       const result = await app.mongo.find(NAME, {
@@ -569,15 +577,17 @@ describe('test/mongo.test.js', () => {
   });
 
   describe('count()', () => {
-    beforeEach(async () =>
-      await app.mongo.insertMany(NAME, {
-        docs: [
-          { type: 'doc' },
-          { type: 'doc' },
-          { type: 'text' },
-          { type: 'text' },
-        ],
-      }));
+    beforeEach(
+      async () =>
+        await app.mongo.insertMany(NAME, {
+          docs: [
+            { type: 'doc' },
+            { type: 'doc' },
+            { type: 'text' },
+            { type: 'text' },
+          ],
+        })
+    );
 
     it('should  success', async () => {
       const result = await app.mongo.count(NAME, {
@@ -593,15 +603,17 @@ describe('test/mongo.test.js', () => {
   });
 
   describe('distinct()', () => {
-    beforeEach(async () =>
-      await app.mongo.insertMany(NAME, {
-        docs: [
-          { type: 'doc' },
-          { type: 'doc' },
-          { type: 'text' },
-          { type: 'text' },
-        ],
-      }));
+    beforeEach(
+      async () =>
+        await app.mongo.insertMany(NAME, {
+          docs: [
+            { type: 'doc' },
+            { type: 'doc' },
+            { type: 'text' },
+            { type: 'text' },
+          ],
+        })
+    );
 
     it('should success', async () => {
       const result = await app.mongo.distinct(NAME, {
@@ -674,7 +686,7 @@ describe('test/mongo.test.js', () => {
       try {
         await app.mongo.createCollection();
       } catch (error) {
-        assert.equal(error.message, 'must pass name of collection to create');
+        assert.equal(error.message, 'collection name has invalid type null');
       }
     });
   });

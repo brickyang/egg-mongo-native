@@ -712,11 +712,14 @@ describe('test/mongo.test.js', () => {
     });
 
     it('should error', async () => {
-      await assert.rejects(async () => {
+      try {
         await app.mongo.createCollection();
-      }, {
-        message: /collection/,
-      });
+      } catch (e) {
+        assert(
+          e.message === 'must pass name of collection to create' ||
+          e.message === 'collection name has invalid type null'
+        );
+      }
     });
   });
 

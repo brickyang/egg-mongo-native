@@ -103,6 +103,47 @@ describe('test/mongo.test.js', () => {
     });
   });
 
+  describe('findOne()', () => {
+    beforeEach(async () =>
+      await app.mongo.insertMany(NAME, {
+        docs: [
+          { index: 1, type: 'doc' },
+          { index: 2, type: 'doc' },
+          { index: 3, type: 'doc' },
+        ],
+      }));
+
+    it('should success', async () => {
+      const result = await app.mongo.findOne(NAME, {
+        query: { type: 'doc' },
+      });
+      assert.equal(result.index, 1);
+      assert.equal(result.type, 'doc');
+    });
+
+    it('should success with projection', async () => {
+      const result = await app.mongo.findOne(NAME, { options: { projection: { index: 1 } } });
+      assert(result.hasOwnProperty('index'));
+      assert(!result.hasOwnProperty('type'));
+    });
+
+    it('should success with sort', async () => {
+      const result = await app.mongo.findOne(NAME, { options: { sort: { index: -1 } } });
+      assert.equal(result.index, 3);
+    });
+
+    it('should success with empty args', async () => {
+      const result = await app.mongo.findOne(NAME);
+      assert.equal(result.index, 1);
+      assert.equal(result.type, 'doc');
+    });
+
+    it('should success when document not found', async () => {
+      const result = await app.mongo.findOne(NAME, { query: { index: 0 } });
+      assert.equal(result, null);
+    });
+  });
+
   describe('findOneAndUpdate()', () => {
     let _id;
     let docs;
@@ -673,8 +714,11 @@ describe('test/mongo.test.js', () => {
     it('should error', async () => {
       try {
         await app.mongo.createCollection();
-      } catch (error) {
-        assert.equal(error.message, 'must pass name of collection to create');
+      } catch (e) {
+        assert(
+          e.message === 'must pass name of collection to create' ||
+          e.message === 'collection name has invalid type null'
+        );
       }
     });
   });

@@ -31,8 +31,7 @@ It wraps some frequently-used API to make it easy to use but keep all properties
 as it is. For example, to find a document you need this with official API
 
 ```js
-db
-  .collection('name')
+db.collection('name')
   .find(query, options)
   .skip(skip)
   .limit(limit)
@@ -169,28 +168,31 @@ The `args` is an object provides the arguments to official API.
 
 You can access these properties of `app.mongo`。
 
-* **db**: the db instance connected
-* **config**: the client config, typically is an object includes the host, port, name, user, password and options.
+- **db**: the db instance connected
+- **config**: the client config, typically is an object includes the host, port, name, user, password and options.
 
 ## Methods
 
 Until now, this plugin provides these functions:
 
-* **connect**: automatically connected, no need to call
-* **insertOne**
-* **insertMany**
-* **findOneAndUpdate**
-* **findOneAndReplace**
-* **findOneAndDelete**
-* **updateMany**
-* **deleteMany**
-* **find**
-* **count**
-* **distinct**
-* **createIndex**
-* **listCollection**
-* **createCollection**
-* **aggregate**: need version 2.2.0 and above
+- **connect**: automatically connected, no need to call
+- **insertOne**
+- **insertMany**
+- **findOne**
+- **findOneAndUpdate**
+- **findOneAndReplace**
+- **findOneAndDelete**
+- **updateMany**
+- **deleteMany**
+- **find**
+- **count**: DEPRECATED
+- **countDocuments**
+- **estimatedDocumentCount**
+- **distinct**
+- **createIndex**
+- **listCollection**
+- **createCollection**
+- **aggregate**: need version 2.2.0 and above
 
 You can always use `app.mongo.db` to use all official APIs. Check the
 APIs here:

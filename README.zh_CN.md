@@ -30,8 +30,7 @@ MongoDB 官方 driver 及 API。
 插件对一些常用 API 进行了简单封装以简化使用，同时保留了所有原版属性。例如，使用原版 API 进行一次查找需要写
 
 ```js
-db
-  .collection('name')
+db.collection('name')
   .find(query, options)
   .skip(skip)
   .limit(limit)
@@ -168,28 +167,31 @@ app.mongo.get('db1').insertOne('name', args);
 
 在 `app.mongo` 上提供下列属性：
 
-* **db**：已连接的数据库实例
-* **config**：数据库连接设置，即 `config.mongo.client`
+- **db**：已连接的数据库实例
+- **config**：数据库连接设置，即 `config.mongo.client`
 
 ## API
 
 目前插件提供的 API 包括：
 
-* **connect**：应用启动时会自动连接，不需要手动操作
-* **insertOne**
-* **insertMany**
-* **findOneAndUpdate**
-* **findOneAndReplace**
-* **findOneAndDelete**
-* **updateMany**
-* **deleteMany**
-* **find**
-* **count**
-* **distinct**
-* **createIndex**
-* **listCollection**
-* **createCollection**
-* **aggregate**：2.2.0 及以上版本提供（建议使用 3.x 版本）
+- **connect**：应用启动时会自动连接，不需要手动操作
+- **insertOne**
+- **insertMany**
+- **findOne**
+- **findOneAndUpdate**
+- **findOneAndReplace**
+- **findOneAndDelete**
+- **updateMany**
+- **deleteMany**
+- **find**
+- **count**: 已过时
+- **countDocuments**
+- **estimatedDocumentCount**
+- **distinct**
+- **createIndex**
+- **listCollection**
+- **createCollection**
+- **aggregate**：2.2.0 及以上版本提供（建议使用 3.x 版本）
 
 当然，在任何时候你也都可以使用 `app.mongo.db` 调用所有 API。在这里查看所有
 API：[Node.js MongoDB Driver API](http://mongodb.github.io/node-mongodb-native/3.0/api/)。

@@ -14,14 +14,14 @@
     "mongo-driver"
   ],
   "dependencies": {
-    "@types/mongodb": "^3.0.10",
-    "mongodb": "^3.0.5"
+    "@types/mongodb": "^3.1.17",
+    "mongodb": "^3.1.10"
   },
   "devDependencies": {
     "egg": "^2.6.0",
     "egg-bin": "^4.6.3",
     "egg-mock": "^3.17.0",
-    "eslint": "^4.19.1",
+    "eslint": "^5.10.0",
     "eslint-config-egg": "^7.0.0"
   },
   "engines": {

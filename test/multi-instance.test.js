@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require('assert');
-const MongoDB = require('../lib/mongo');
+const MongoDB = require('@brickyang/easy-mongodb');
 
 describe('test/multi-instance.test.js', () => {
   it('should make replica URI', () => {

@@ -23,6 +23,8 @@
 
 [**中文版**](https://github.com/brickyang/egg-mongo/blob/master/README.zh_CN.md)
 
+Uses who doesn't use Egg.js could use [easy-mongodb](https://github.com/brickyang/easy-mongodb).
+
 This plugin base on
 [node-mongodb-native](https://github.com/mongodb/node-mongodb-native), provides
 the official MongoDB native driver and APIs.
@@ -164,73 +166,7 @@ app.mongo.get('db1').insertOne('name', args);
 
 The `args` is an object provides the arguments to official API.
 
-## Properties
-
-You can access these properties of `app.mongo`。
-
-- **db**: the db instance connected
-- **config**: the client config, typically is an object includes the host, port, name, user, password and options.
-
-## Methods
-
-Until now, this plugin provides these functions:
-
-- **connect**: automatically connected, no need to call
-- **insertOne**
-- **insertMany**
-- **findOne**
-- **findOneAndUpdate**
-- **findOneAndReplace**
-- **findOneAndDelete**
-- **updateMany**
-- **deleteMany**
-- **find**
-- **count**: DEPRECATED
-- **countDocuments**
-- **estimatedDocumentCount**
-- **distinct**
-- **createIndex**
-- **listCollection**
-- **createCollection**
-- **aggregate**: need version 2.2.0 and above
-
-You can always use `app.mongo.db` to use all official APIs. Check the
-APIs here:
-[Node.js MongoDB Driver API](http://mongodb.github.io/node-mongodb-native/3.0/api/).
-
-## Promise
-
-`node-mongodb-native` supports Promise, you can call all APIs async or sync.
-
-### Async
-
-```js
-// Promise
-function create(doc) {
-  app.mongo
-    .insertOne('name', { doc })
-    .then(result => console.log(result))
-    .catch(error => console.error(error));
-}
-```
-
-### Sync
-
-```js
-// async/await
-async function create(doc) {
-  try {
-    const result = await app.mongo.insertOne('name', { doc });
-    console.log(result);
-  } catch (error) {
-    console.error(error);
-  }
-}
-```
-
-If you use `app.mongo.db` you could use callback(usually the last argument), but
-this plugin doesn't supports callback because Promise and async/await are better
-choice.
+Please read [easy-mongodb](https://github.com/brickyang/easy-mongodb) for all APIs(tansaction is now supported) and more examples.
 
 ## License
 

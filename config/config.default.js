@@ -11,8 +11,9 @@ exports.mongo = {
   //   host: 'localhost',
   //   port: 27017,
   //   name: 'test',
+  //   user: 'admin',
+  //   password: '',
   // },
-
   // Replica Set
   // client: {
   //   host: [ 'host1', 'host2' ],
@@ -22,7 +23,6 @@ exports.mongo = {
   //     replicaSet: 'test',
   //   },
   // },
-
   // Multi Instances
   // clients: {
   //   foo: {

@@ -6,11 +6,11 @@ type Default = any;
 type MongoDBSingleton = MongoDB & { get(name: string): MongoDB };
 
 interface IMongoConfig {
-  host?: string | string[];
-  port?: string | number;
-  name?: string;
-  user?: string;
-  password?: string;
+  host: string | string[];
+  port: string | number;
+  name: string;
+  user: string;
+  password: string;
   options?: MongoClientOptions;
 }
 

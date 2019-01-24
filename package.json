@@ -1,6 +1,6 @@
 {
   "name": "egg-mongo-native",
-  "version": "3.4.1",
+  "version": "3.4.2",
   "description": "MongoDB egg.js plugin using native driver.",
   "eggPlugin": {
     "name": "mongo"
@@ -14,7 +14,7 @@
     "mongo-driver"
   ],
   "dependencies": {
-    "@brickyang/easy-mongodb": "^1.1.0",
+    "@brickyang/easy-mongodb": "^1.1.1",
     "@types/mongodb": "^3.1.17"
   },
   "devDependencies": {

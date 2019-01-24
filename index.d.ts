@@ -1,4 +1,3 @@
-import EventEmitter from 'events';
 import { MongoClientOptions } from 'mongodb';
 import MongoDB from '@brickyang/easy-mongodb';
 

@@ -1,5 +1,5 @@
 'use strict';
-const MongoDB = require('./lib/mongo');
+const MongoDB = require('@brickyang/easy-mongodb');
 
 module.exports = app => {
   app.addSingleton('mongo', createMongo);
@@ -9,7 +9,7 @@ function createMongo(config, app) {
   const client = new MongoDB(config);
   const connectUrl = client.url.replace(
     /:\S*@/,
-    `://${client.config.name}:******@`
+    `://${client.config.user}:******@`
   );
 
   client.on('connect', () => {

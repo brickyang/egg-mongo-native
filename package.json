@@ -1,6 +1,6 @@
 {
   "name": "egg-mongo-native",
-  "version": "3.3.0",
+  "version": "3.4.2",
   "description": "MongoDB egg.js plugin using native driver.",
   "eggPlugin": {
     "name": "mongo"
@@ -14,8 +14,8 @@
     "mongo-driver"
   ],
   "dependencies": {
-    "@types/mongodb": "^3.1.17",
-    "mongodb": "^3.1.10"
+    "@brickyang/easy-mongodb": "^1.1.1",
+    "@types/mongodb": "^3.1.17"
   },
   "devDependencies": {
     "egg": "^2.6.0",
@@ -28,7 +28,7 @@
     "node": ">=8.9.0"
   },
   "scripts": {
-    "test": "npm run lint -- --fix && npm run test-local",
+    "test": "npm run lint -- --fix && npm run cov",
     "test-local": "egg-bin test",
     "cov": "egg-bin cov",
     "lint": "eslint .",

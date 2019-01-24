@@ -23,6 +23,8 @@
 
 [**English**](https://github.com/brickyang/egg-mongo/blob/master/README.md)
 
+非 Egg.js 用户请使用 [easy-mongodb](https://github.com/brickyang/easy-mongodb)。
+
 本插件基于
 [node-mongodb-native](https://github.com/mongodb/node-mongodb-native)，提供了
 MongoDB 官方 driver 及 API。
@@ -81,7 +83,7 @@ exports.mongo = {
 };
 ```
 
-### 集群 (v2.1.0 以上 )
+### 副本集 (v2.1.0 以上 )
 
 ```js
 // mongodb://host1:port1,host2:port2/name?replicaSet=test
@@ -163,72 +165,7 @@ app.mongo.get('db1').insertOne('name', args);
 
 可以看到 `args` 就是包含原版 API 参数的一个对象。
 
-## 属性
-
-在 `app.mongo` 上提供下列属性：
-
-- **db**：已连接的数据库实例
-- **config**：数据库连接设置，即 `config.mongo.client`
-
-## API
-
-目前插件提供的 API 包括：
-
-- **connect**：应用启动时会自动连接，不需要手动操作
-- **insertOne**
-- **insertMany**
-- **findOne**
-- **findOneAndUpdate**
-- **findOneAndReplace**
-- **findOneAndDelete**
-- **updateMany**
-- **deleteMany**
-- **find**
-- **count**: 已过时
-- **countDocuments**
-- **estimatedDocumentCount**
-- **distinct**
-- **createIndex**
-- **listCollection**
-- **createCollection**
-- **aggregate**：2.2.0 及以上版本提供（建议使用 3.x 版本）
-
-当然，在任何时候你也都可以使用 `app.mongo.db` 调用所有 API。在这里查看所有
-API：[Node.js MongoDB Driver API](http://mongodb.github.io/node-mongodb-native/3.0/api/)。
-
-## 同步与异步
-
-`node-mongodb-native` 所有 API 都支持 Promise，因此你可以自由地以异步或同步方式使用本插件。
-
-### 异步
-
-```js
-// Promise
-function create(doc) {
-  app.mongo
-    .insertOne('name', { doc })
-    .then(result => console.log(result))
-    .catch(error => console.error(error));
-}
-```
-
-### 同步
-
-```js
-// 使用 async/await
-async function create(doc) {
-  try {
-    const result = await app.mongo.insertOne('name', { doc });
-    console.log(result);
-  } catch (error) {
-    console.error(error);
-  }
-}
-```
-
-如果你使用 `app.mongo.db` 调用原版 API，则也可以使用回调函数。插件封装的 API 不支持回调函数，因为 Promise 和 async/await 更加优雅。
-
-Node.js 7.6 开始已经原生支持 async/await，不再需要 Babel。
+完整 API（现已支持 MongoDB 4.0 的事务）和更多示例请参考 [easy-mongodb](https://github.com/brickyang/easy-mongodb)。
 
 ## License
 

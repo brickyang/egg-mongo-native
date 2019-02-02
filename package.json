@@ -14,7 +14,7 @@
     "mongo-driver"
   ],
   "dependencies": {
-    "@brickyang/easy-mongodb": "^1.1.1",
+    "@brickyang/easy-mongodb": "^2.0.0",
     "@types/mongodb": "^3.1.17"
   },
   "devDependencies": {
@@ -42,12 +42,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:brickyang/egg-mongo.git"
+    "url": "git@github.com:brickyang/egg-mongo-native.git"
   },
   "bugs": {
-    "url": "https://github.com/brickyang/egg-mongo/issues"
+    "url": "https://github.com/brickyang/egg-mongo-native/issues"
   },
-  "homepage": "https://github.com/brickyang/egg-mongo",
+  "homepage": "https://github.com/brickyang/egg-mongo-native",
   "author": "Brick <brick.c.yang@gmail.com>",
   "license": "MIT"
 }

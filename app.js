@@ -1,5 +1,5 @@
 'use strict';
-const MongoDB = require('@brickyang/easy-mongodb');
+const MongoDB = require('@brickyang/easy-mongodb').default;
 
 module.exports = app => {
   app.addSingleton('mongo', createMongo);

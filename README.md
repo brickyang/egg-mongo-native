@@ -23,7 +23,7 @@
 
 [**中文版**](https://github.com/brickyang/egg-mongo/blob/master/README.zh_CN.md)
 
-Uses who don't use Egg.js could use [easy-mongodb](https://github.com/brickyang/easy-mongodb).
+Users who don't use Egg.js could use [easy-mongodb](https://github.com/brickyang/easy-mongodb).
 
 This plugin base on
 [node-mongodb-native](https://github.com/mongodb/node-mongodb-native), provides

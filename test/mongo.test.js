@@ -711,7 +711,7 @@ describe('test/mongo.test.js', () => {
       const result = await app.mongo.distinct(NAME, {
         key: 'type',
       });
-      assert.deepEqual(result, ['doc', 'text']);
+      assert.deepEqual(result, [ 'doc', 'text' ]);
     });
 
     it('should success with query', async () => {
@@ -720,7 +720,7 @@ describe('test/mongo.test.js', () => {
         query: { type: 'doc' },
       });
       assert(Array.isArray(result));
-      assert.deepEqual(result, ['doc']);
+      assert.deepEqual(result, [ 'doc' ]);
     });
 
     it('should error', async () => {
@@ -805,7 +805,7 @@ describe('test/mongo.test.js', () => {
           },
         },
       ];
-      const [result] = await app.mongo.aggregate(NAME, { pipeline });
+      const [ result ] = await app.mongo.aggregate(NAME, { pipeline });
       assert.equal(result.count, docs.length);
     });
 
